@@ -10,22 +10,31 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import javafx.scene.control.Dialog;
+
+
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class MainApp extends Application
 {
-    //private static final int BOARD_SIZE = 9;
-    private static final int NUM_CATEGORIES = 4;
-    private static final String[] CATEGORIES = {"Science", "Math", "History", "English"};
+
+    private LinkedList<String> categoryList = new LinkedList<>();
+    
+    private String redCategory;
+    private String blueCategory;
+    private String greenCategory;
+    private String yellowCategory;
+    
 
     private Board board;
     private List<Player> allPlayers;
     private int currentPlayerIndex;
     private Player currentPlayer;
     private Cell currentCell;
-    private Boolean rollAgain;
     private Boolean answerCorrect;
 
     private Label currentPlayerLabel;
@@ -33,14 +42,14 @@ public class MainApp extends Application
     private Label questionLabel;
     private Label rollNumberLabel;
     private Button rollButton;
-    private int rollNumber;
-    private Button answerButton;    
-    
+    private int rollNumber;   
     
     private Button moveUpButton;
     private Button moveDownButton;
     private Button moveLeftButton;
     private Button moveRightButton;
+    
+    private Stage primaryStage;
 
     public static void main(String[] args)
     {
@@ -50,11 +59,11 @@ public class MainApp extends Application
     }
 
     @Override
-    public void start(Stage primaryStage)
+    public void start(Stage primaryStageInput)
     {
+    	primaryStage = primaryStageInput;
         primaryStage.setTitle("Trivial Pursuit");
        
-        rollAgain = false;
         answerCorrect = false;
 
         board = new Board();
@@ -69,6 +78,30 @@ public class MainApp extends Application
         root.setCenter(board.getBoardPane());
         root.setBottom(createFooter());
         
+        StartGameDialog sgd = new StartGameDialog();
+        sgd.showAndWait();
+        
+        System.out.println("added players: " + sgd.playerNameList);
+        System.out.println("chosen category for red: " + sgd.redCategoryName);
+        System.out.println("valid game: " + sgd.validGameParameters);
+        
+        if(!sgd.validGameParameters)
+        {
+        	return;
+        }
+        
+        redCategory = sgd.redCategoryName;
+        blueCategory = sgd.blueCategoryName;
+        greenCategory = sgd.greenCategoryName;
+        yellowCategory = sgd.yellowCategoryName;
+        
+        for(int playerCnt = 0; playerCnt < sgd.playerNameList.size(); playerCnt ++)
+        {
+        	Color playerColor = getPlayerColorFromInt(playerCnt);
+        	String playerName = sgd.playerNameList.get(playerCnt);
+
+        	addPlayer(playerName, playerColor);
+        }
 
         Scene scene = new Scene(root, 800, 800);
         
@@ -78,19 +111,26 @@ public class MainApp extends Application
         
         // Add Dialog to ask how many players want to play. Enter Players Names, then add players below.
 
-        addPlayer("Player 1-Red", Color.RED);
+        //addPlayer("Player 1-Red", Color.RED);
         //addPlayer("Player 2-Blue", Color.BLUE);
         //addPlayer("Player 3-Green", Color.GREEN);
        // addPlayer("Player 4-Yellow", Color.YELLOW);
+        
+        // set categories based on input from game start dialog that still needs to be made
+        
+        
+        setCategories();
         
         Random rand = new Random();
         if(allPlayers.size()>1)
         {
         	currentPlayerIndex = rand.nextInt(allPlayers.size()-1);
         }
-        	
-        currentPlayerLabel.setText(allPlayers.get(currentPlayerIndex).getName() + "'s Turn");
+        
         currentPlayer = allPlayers.get(currentPlayerIndex);
+        	
+        currentPlayerLabel.setText("Player's Turn: " + currentPlayer.getName() + "-" + currentPlayer.colorStr);
+        
         currentCell = board.getCells()[currentPlayer.getRow()][currentPlayer.getCol()];
         
     }
@@ -141,14 +181,8 @@ public class MainApp extends Application
         rollNumberLabel.setStyle("-fx-border-color: black;");
         rollNumberLabel.setStyle("-fx-font-weight: bold;");
         rollNumberLabel.setPrefWidth(20);
-        
 
-        answerButton = new Button("Answer");
-        answerButton.setOnAction(e -> answerButtonClicked());
-        answerButton.setDisable(true);
-
-
-        footerBox.getChildren().addAll(rollButton, rollNumberLabel, answerButton, moveUpButton, moveDownButton, moveLeftButton, moveRightButton);
+        footerBox.getChildren().addAll(rollButton, rollNumberLabel, moveUpButton, moveDownButton, moveLeftButton, moveRightButton);
 
         return footerBox;
     }
@@ -162,41 +196,10 @@ public class MainApp extends Application
         
         setValidMovementDirections();
 
-        currentPlayerLabel.setText(currentPlayer.getName() + "'s Turn");
-        categoryLabel.setText("Category: " + CATEGORIES[currentPlayer.getCurrentCategory()]);
-        questionLabel.setText("");
         rollNumberLabel.setText(Integer.toString(rollNumber));
         
         rollButton.setDisable(true);
         
-        //Get Question based on category type on the square that is landed on. 
-        
-
-    }
-
-    private void answerButtonClicked()
-    {
-        int categoryIndex = currentPlayer.getCurrentCategory();
-        int selectedCategoryIndex = -1;
-
-        // Display correct answer to the question;
-        // Could use the label below for simple solution;
-
-        String answerStr = "Placeholder Answer";
-        
-        questionLabel.setText("Correct Answer:" + answerStr);
-        
-        
-        // If Answered Correctly, re-enable roll button.
-        //If not, change turns to next player.
-         
-
-        rollButton.setDisable(false);
-        answerButton.setDisable(true);
-
-        // Only change if the question is wrong in the future
-        currentPlayerIndex = (currentPlayerIndex + 1) % allPlayers.size();
-        currentPlayer = allPlayers.get(currentPlayerIndex);
     }
     
     private void moveUp()
@@ -235,11 +238,24 @@ public class MainApp extends Application
     			movePiece(currentRow, currentCol, newRow, newCol);
     			if(!currentCell.getIsRollAgainCell())
     			{
-    				// launch question dialog, set question correct value
+    				// launch question dialog
+    				QuestionDialog questionDialog = new QuestionDialog(categoryList.get(currentCell.getCellCategoryIndex()));
+    				questionDialog.showAndWait();
     				
-    				
-    				answerCorrect = true;
-    				changePlayers();
+    				answerCorrect = questionDialog.answerCorrect;
+    				if(!answerCorrect)
+    				{
+    					changePlayers();
+    				}
+    				else
+    				{
+    					if(currentCell.getIsHqCell()  && answerCorrect)
+    					{
+    						//Before we change, update players scoreboard
+    						managePlayerScoreboard();
+    					}
+    					resetBoard();
+    				}
     			}
     			else
     			{
@@ -292,10 +308,25 @@ public class MainApp extends Application
 			System.out.println("currentCell color after movePiece:" + currentCell.getCellColor());
 			if(!currentCell.getIsRollAgainCell())
 			{
-				// launch question dialog, set question correct value
+				// launch question dialog
+				QuestionDialog questionDialog = new QuestionDialog(categoryList.get(currentCell.getCellCategoryIndex()));
+				questionDialog.showAndWait();
 				
-				answerCorrect = true;
-				changePlayers();
+				answerCorrect = questionDialog.answerCorrect;
+				if(!answerCorrect)
+				{
+					changePlayers();
+				}
+				else
+				{
+					if(currentCell.getIsHqCell()  && answerCorrect)
+					{
+						//Before we change, update players scoreboard
+						managePlayerScoreboard();
+					}
+					resetBoard();
+				}
+			
 			}
 			else
 			{
@@ -342,11 +373,25 @@ public class MainApp extends Application
 			movePiece(currentRow, currentCol, currentRow, newCol);
 			if(!currentCell.getIsRollAgainCell())
 			{
-				// launch question dialog, set question correct value
+				// launch question dialog
+				QuestionDialog questionDialog = new QuestionDialog(categoryList.get(currentCell.getCellCategoryIndex()));
+				questionDialog.showAndWait();
 				
-				
-				answerCorrect = true;
-				changePlayers();
+				answerCorrect = questionDialog.answerCorrect;
+				if(!answerCorrect)
+				{
+					changePlayers();
+				}
+				else
+				{
+					if(currentCell.getIsHqCell()  && answerCorrect)
+					{
+						//Before we change, update players scoreboard
+						managePlayerScoreboard();
+					}
+					resetBoard();
+				}
+			
 			}
 			else
 			{
@@ -395,12 +440,25 @@ public class MainApp extends Application
 			movePiece(currentRow, currentCol, currentRow, newCol);
 			if(!currentCell.getIsRollAgainCell())
 			{
-				movePiece(currentRow, currentCol, currentRow, newCol);
-				// launch question dialog, set question correct value
+				// launch question dialog
+				QuestionDialog questionDialog = new QuestionDialog(categoryList.get(currentCell.getCellCategoryIndex()));
+				questionDialog.showAndWait();
 				
-				
-				answerCorrect = true;
-				changePlayers();
+				answerCorrect = questionDialog.answerCorrect;
+				if(!answerCorrect)
+				{
+					changePlayers();
+				}
+				else
+				{
+					if(currentCell.getIsHqCell()  && answerCorrect)
+					{
+						//Before we change, update players scoreboard
+						managePlayerScoreboard();
+					}
+					resetBoard();
+				}
+			
 			}
 			else
 			{
@@ -446,7 +504,6 @@ public class MainApp extends Application
 	private void resetBoard()
 	{
 		disableMoveButtons();
-		answerButton.setDisable(true);
 		rollButton.setDisable(false);
 		rollNumberLabel.setText("");
 	}
@@ -620,21 +677,13 @@ public class MainApp extends Application
 	
 	private void changePlayers()
 	{
-		System.out.println("currentCell color in change players: " + currentCell.getCellColor());
-		if(currentCell.getIsHqCell()  && answerCorrect)
-		{
-			//Before we change, update players scoreboard
-			managePlayerScoreboard();
-		}
-		
-		
+			
 		currentPlayerIndex = (currentPlayerIndex + 1) % allPlayers.size();
 		currentPlayer = allPlayers.get(currentPlayerIndex);
-		currentPlayerLabel.setText(allPlayers.get(currentPlayerIndex).getName() + "'s Turn");
+		currentPlayerLabel.setText("Player's Turn: " + currentPlayer.getName() + "-" + currentPlayer.colorStr);
 		disableMoveButtons();
 		rollNumberLabel.setText("");
 		rollButton.setDisable(false);
-		answerButton.setDisable(true);
 		
 		currentCell = board.getCells()[currentPlayer.getRow()][currentPlayer.getCol()];
 		
@@ -688,6 +737,40 @@ public class MainApp extends Application
     public int getCurrentPlayerIndex()
     {
     	return currentPlayerIndex;
+    }
+    
+    public void setCategories()
+    {
+    	categoryList.clear();
+    	categoryList.add(redCategory);
+    	categoryList.add(blueCategory);
+    	categoryList.add(greenCategory);
+    	categoryList.add(yellowCategory);
+    	
+    }
+    
+    private Color getPlayerColorFromInt(int colorInt)
+    {
+    	Color playerColor = Color.RED;
+    	
+    	switch(colorInt)
+    	{
+	    	case 0:
+	    		playerColor = Color.RED;
+	    		break;
+	    	case 1:
+	    		playerColor = Color.BLUE;
+	    		break;
+	    	case 2:
+	    		playerColor = Color.GREEN;
+	    		break;
+	    	case 3:
+	    		playerColor = Color.YELLOW;
+	    		break;
+		
+    	}
+    	
+    	return playerColor;
     }
 
 }

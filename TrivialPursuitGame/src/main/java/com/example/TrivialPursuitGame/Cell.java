@@ -179,7 +179,7 @@ public class Cell extends MainApp
             cellPane.setStyle(boardStyleStr);
         }
         
-        System.out.println("sell color after style is set: " + cellColor +  " cellCategoryIndx: " + cellCategoryIndex);
+        //System.out.println("sell color after style is set: " + cellColor +  " cellCategoryIndx: " + cellCategoryIndex);
         
 
     }
@@ -278,4 +278,5 @@ public class Cell extends MainApp
     {
     	return cellColor;
     }
+    
 }

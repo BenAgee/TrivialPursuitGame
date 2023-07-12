@@ -15,6 +15,8 @@ public class Player extends MainApp
     private Boolean hasGreenHqToken;
     private Boolean hasYellowHqToken;
     private Boolean hasAllHqTokens;
+    
+    public String colorStr;
 
     public Player(String name, Color color)
     {
@@ -35,6 +37,8 @@ public class Player extends MainApp
         	this.col = 0;
         	this.row = 0;
         	
+        	colorStr = "Red";
+        	
 //        	this.scoreboardCol = 2;
 //        	this.scoreboardRow = 2;
         } 
@@ -42,6 +46,8 @@ public class Player extends MainApp
         {
         	this.col = 8;
         	this.row = 0;
+        	
+        	colorStr = "Yellow";
         	
 //        	this.scoreboardCol = 6;
 //        	this.scoreboardRow = 2;
@@ -52,6 +58,8 @@ public class Player extends MainApp
         	this.col = 8;
         	this.row = 8;
         	
+        	colorStr = "Blue";
+        	
 //        	this.scoreboardCol = 6;
 //        	this.scoreboardRow = 6;
         }
@@ -59,6 +67,8 @@ public class Player extends MainApp
         {
         	this.col = 0;
         	this.row = 8;
+        	
+        	colorStr = "Green";
         	
 //        	this.scoreboardCol = 2;
 //        	this.scoreboardRow = 6;
