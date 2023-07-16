@@ -77,7 +77,7 @@ public class MainApp extends Application
         root.setTop(createHeader());
         root.setCenter(board.getBoardPane());
         root.setBottom(createFooter());
-        
+
         StartGameDialog sgd = new StartGameDialog();
         sgd.showAndWait();
         
@@ -677,7 +677,7 @@ public class MainApp extends Application
 	
 	private void changePlayers()
 	{
-			
+
 		currentPlayerIndex = (currentPlayerIndex + 1) % allPlayers.size();
 		currentPlayer = allPlayers.get(currentPlayerIndex);
 		currentPlayerLabel.setText("Player's Turn: " + currentPlayer.getName() + "-" + currentPlayer.colorStr);

@@ -19,9 +19,10 @@ import java.util.Random;
 
 
 public class StartGameDialog extends Dialog{
-	
-	
+
+
 	Button startGameButton;
+	Button addQuestionButton;
 	Button addPlayerButton;
 	
 	Boolean validGameParameters = false;
@@ -109,20 +110,32 @@ public class StartGameDialog extends Dialog{
         startGameButton = new Button("Start Game");
         startGameButton.setDisable(true);
 
+		addQuestionButton = new Button("Add Quetsions");
+
+		HBox buttonBox = new HBox();
+		buttonBox.setPadding(new Insets(10));
+		buttonBox.getChildren().addAll(startGameButton, addQuestionButton);
+
         // Set button actions
         addPlayerButton.setOnAction(e -> addPlayerButtonClicked());
         startGameButton.setOnAction(e -> startGameButtonClicked());
-        
+		addQuestionButton.setOnAction(e -> addQuestionClicked());
+
         VBox mainBox = new VBox(10);
         mainBox.setPadding(new Insets(10));
-        mainBox.getChildren().addAll(redBox, blueBox, greenBox, yellowBox, addPlayerBox, startGameButton);
+        mainBox.getChildren().addAll(redBox, blueBox, greenBox, yellowBox, addPlayerBox, buttonBox);
         
         getDialogPane().getScene().getWindow().setOnCloseRequest(event -> this.close());
         
         getDialogPane().setContent(mainBox);
         
 	}
-	
+
+	private void addQuestionClicked()
+	{
+		NewQuestions nq = new NewQuestions();
+		nq.showAndWait();
+	}
 	
 	private void startGameButtonClicked()
 	{
