@@ -1,2 +1,2 @@
-Create Table CATAGORIES (name string, id int);
-Create Table QUESTIONS (question string, answer string, catagory_id int);
+Create Table CATAGORIES (name varchar(255), catagory_id int);
+Create Table QUESTIONS (question varchar(255), answer varchar(255), catagory_id int);

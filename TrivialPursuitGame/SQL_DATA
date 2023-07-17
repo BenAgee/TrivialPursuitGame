@@ -1,0 +1,7 @@
+INSERT INTO CATAGORIES (name, catagory_id) VALUES ('Geography', 1); 
+INSERT INTO CATAGORIES (name, catagory_id) VALUES ('Math', 2); 
+INSERT INTO CATAGORIES (name, catagory_id) VALUES ('Science', 3); 
+INSERT INTO CATAGORIES (name, catagory_id) VALUES ('Space', 4); 
+
+
+INSERT INTO QUESTIONS (question, answer, catagory_id) VALUES ('in which continent is the US?', 'North America', 1);
