@@ -1,0 +1,2 @@
+Create Table CATAGORIES (name string, id int);
+Create Table QUESTIONS (question string, answer string, catagory_id int);
