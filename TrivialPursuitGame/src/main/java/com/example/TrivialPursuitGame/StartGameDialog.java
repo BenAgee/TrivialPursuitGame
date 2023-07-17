@@ -50,7 +50,6 @@ public class StartGameDialog extends Dialog{
 		this.setTitle("Trivial Compute Start Page");
 		buildUI();
 		
-		
         
 	}
 	
@@ -110,7 +109,7 @@ public class StartGameDialog extends Dialog{
         startGameButton = new Button("Start Game");
         startGameButton.setDisable(true);
 
-		addQuestionButton = new Button("Add Quetsions");
+		addQuestionButton = new Button("Add Questions");
 
 		HBox buttonBox = new HBox();
 		buttonBox.setPadding(new Insets(10));
@@ -123,7 +122,7 @@ public class StartGameDialog extends Dialog{
 
         VBox mainBox = new VBox(10);
         mainBox.setPadding(new Insets(10));
-        mainBox.getChildren().addAll(redBox, blueBox, greenBox, yellowBox, addPlayerBox, buttonBox);
+        mainBox.getChildren().addAll(headerLabel, redBox, blueBox, greenBox, yellowBox, addPlayerBox, buttonBox);
         
         getDialogPane().getScene().getWindow().setOnCloseRequest(event -> this.close());
         
