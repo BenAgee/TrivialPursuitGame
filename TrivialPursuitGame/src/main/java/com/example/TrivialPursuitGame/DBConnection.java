@@ -98,7 +98,7 @@ class DBConnection{
 		Connection con = null;
 		try {
 			con = DriverManager.getConnection(
-					"jdbc:mysql://localhost:2918/TRIVIA_COMPUTE", "rcobian", "R@iders2918!");
+					"jdbc:mysql://localhost:2918/TRIVIA_COMPUTE", "test", "test");
 			return con;
 		} catch (Exception e) { 
 			System.out.println(e);
