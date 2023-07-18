@@ -6,6 +6,10 @@ import java.util.ArrayList;
 class DBConnection{  
 	static Connection con;
 	
+	final private String mysqlUsername = "trivia"; // changed from test
+	final private String mysqlPw = "poiulkjh"; // changed from test
+	final private String portNumber = "3306"; // changed from 2918
+	
 	public DBConnection() {
 		con = connectDB();
 		System.out.println("Connection Succesful!");
@@ -39,7 +43,7 @@ class DBConnection{
 
 			System.out.println(category_id);
 			stmt = con.prepareStatement(
-					"INSERT INTO QUESTIONS (question, answer, catagory_id) VALUES (?,?,?)");
+					"INSERT INTO QUESTIONS (question, answer, category_id) VALUES (?,?,?)"); // fixed this, category was spelled "catagory"
 			stmt.setString(1,question);
 			stmt.setString(2, answer);
 			stmt.setInt(3, category_id);
@@ -98,7 +102,9 @@ class DBConnection{
 		Connection con = null;
 		try {
 			con = DriverManager.getConnection(
-					"jdbc:mysql://localhost:2918/TRIVIA_COMPUTE", "test", "test");
+					"jdbc:mysql://localhost:"+ portNumber+"/TRIVIA_COMPUTE", mysqlUsername, mysqlPw);
+			
+			System.out.println("made connection");
 			return con;
 		} catch (Exception e) { 
 			System.out.println(e);

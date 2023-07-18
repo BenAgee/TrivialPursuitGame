@@ -33,6 +33,8 @@ public class NewQuestions extends Dialog{
         super();
         db = new DBConnection();
         //nothing really to setup here
+        
+        System.out.println("db connected:" + db.toString());
         this.setTitle("Trivial Compute Question Page");
         buildUI();
         
