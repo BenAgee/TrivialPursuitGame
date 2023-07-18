@@ -18,29 +18,25 @@ class Test_Board {
 	@Test
 	void testBoard() 
 	{
-		Board tBoard = new Board();
-		GridPane tBoardPane = tBoard.getBoardPane();
-		
-		assertEquals(tBoardPane.getAlignment(), Pos.CENTER); 
-	
+		fail("Not yet implemented");
 	}
 
 	@Test
 	void testAddPlayer() 
 	{
-		assertTrue(true);
+
 	}
 
 	@Test
 	void testGetBoardPane() 
 	{
-		assertTrue(true);
+		fail("Not yet implemented");
 	}
 
 	@Test
 	void testGetCells() 
 	{
-		assertTrue(true);
+		fail("Not yet implemented");
 	}
 
 }

@@ -4,11 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class Test_QuestionsDialog {
+class Test_NewQuestion {
 
 	@Test
-	void testQuestionDialog() 
-	{
+	void testNewQuestions() {
 		fail("Not yet implemented");
 	}
 
