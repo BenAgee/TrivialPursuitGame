@@ -1,5 +1,7 @@
 package com.example.TrivialPursuitGame;
 
+import java.util.ArrayList;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -24,9 +26,12 @@ public class NewQuestions extends Dialog{
     TextField question;
     TextField answer;
     TextField category;
+    
+    DBConnection db;
 
     public NewQuestions() {
         super();
+        db = new DBConnection();
         //nothing really to setup here
         this.setTitle("Trivial Compute Question Page");
         buildUI();
@@ -71,9 +76,9 @@ public class NewQuestions extends Dialog{
     }
 
     private void addCatagory() {
-        //add catagory logic
+        //add category logic
         System.out.println("Adding catagory");
-        
+        db.addCategory(category.getText());
         updateCategoriesBox();
         return;
     }
@@ -81,6 +86,8 @@ public class NewQuestions extends Dialog{
     private void addQuestion() {
         //add question logic
         System.out.println("Adding question");
+        System.out.println(available_categories_box.getValue());
+        db.addQuestion(question.getText(), answer.getText(), available_categories_box.getValue());
         return;
     }
 
@@ -93,9 +100,13 @@ public class NewQuestions extends Dialog{
     private void updateCategoriesBox()
     {
     	// add logic to query categories table and add results as options to the available_categories_box
-    	
+    	ArrayList<String> availableCategories = db.getAllCategories();
+    	for (String category : availableCategories) {
+    		System.out.println(category);
+    	}
     	// placeholder categories, will be replaced with values from query
-    	String availableCategories[] = {"cat 1", "cat 2", "cat 3", "cat 4"};
+//    	String availableCategories[] = {"cat 1", "cat 2", "cat 3", "cat 4"};
+    	
         
         ObservableList<String> availableCategoriesList = FXCollections.observableArrayList(
                 availableCategories

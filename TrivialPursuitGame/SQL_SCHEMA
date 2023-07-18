@@ -1,2 +1,11 @@
-Create Table CATAGORIES (name varchar(255), catagory_id int);
-Create Table QUESTIONS (question varchar(255), answer varchar(255), catagory_id int);
+Create Table CATEGORIES (
+	category_id int NOT NULL AUTO_INCREMENT,
+	name varchar(255), 
+	PRIMARY KEY (category_id)
+);
+
+Create Table QUESTIONS (
+	question varchar(255), 
+	answer varchar(255),
+	category_id int
+);
