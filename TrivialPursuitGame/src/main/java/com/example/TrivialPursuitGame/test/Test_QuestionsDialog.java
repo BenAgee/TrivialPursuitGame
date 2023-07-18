@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 class Test_QuestionsDialog {
 
 	@Test
-	void testQuestionDialog() 
-	{
+	void test() {
 		fail("Not yet implemented");
 	}
 

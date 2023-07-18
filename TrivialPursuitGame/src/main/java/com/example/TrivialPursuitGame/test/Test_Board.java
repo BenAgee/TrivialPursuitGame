@@ -24,7 +24,7 @@ class Test_Board {
 	@Test
 	void testAddPlayer() 
 	{
-
+		fail("Not yet implemented");
 	}
 
 	@Test
