@@ -1,13 +1,11 @@
-package com.example.TrivialPursuitGame.test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class Test_NewQuestion {
+class Test_QuestionsDialog {
 
 	@Test
-	void testNewQuestions() {
+	void test() {
 		fail("Not yet implemented");
 	}
 
