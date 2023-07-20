@@ -14,7 +14,9 @@ import javafx.stage.Stage;
 
 import javafx.scene.control.Dialog;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
 
 
@@ -24,6 +26,8 @@ public class StartGameDialog extends Dialog{
 	Button startGameButton;
 	Button addQuestionButton;
 	Button addPlayerButton;
+	
+	DBConnection db;
 	
 	Boolean validGameParameters = false;
 	
@@ -38,7 +42,7 @@ public class StartGameDialog extends Dialog{
     ComboBox<String> blueInput;
     ComboBox<String> greenInput;
     ComboBox<String> yellowInput;
-	
+    
 	TextField playerInput;
 	
 	
@@ -46,6 +50,8 @@ public class StartGameDialog extends Dialog{
 	{
 		super(); // invokes constructor of the Dialog class
 		playerNameList = new LinkedList<>();
+		
+		db = new DBConnection();
 		
 		this.setTitle("Trivial Compute Start Page");
 		buildUI();
@@ -68,17 +74,17 @@ public class StartGameDialog extends Dialog{
         // get tables from db will do the trick
         // convert query to array list below to add to combo boxes
         
-        String availableCategories[] = {"cat 1", "cat 2", "cat 3", "cat 4"};
+        
+        ArrayList<String> availableCategories = db.getAllCategories();
         
         ObservableList<String> availableCategoriesList = FXCollections.observableArrayList(
                 availableCategories
             );
         
-        redInput = new ComboBox(availableCategoriesList);
-        blueInput = new ComboBox(availableCategoriesList);
-        greenInput = new ComboBox(availableCategoriesList);
-        yellowInput = new ComboBox(availableCategoriesList);
-
+        redInput = new ComboBox<String>(availableCategoriesList);
+        blueInput = new ComboBox<String>(availableCategoriesList);
+        greenInput = new ComboBox<String>(availableCategoriesList);
+        yellowInput = new ComboBox<String>(availableCategoriesList);
         
         HBox redBox = new HBox(10);
         redBox.setPadding(new Insets(10));
@@ -134,6 +140,9 @@ public class StartGameDialog extends Dialog{
 	{
 		NewQuestions nq = new NewQuestions();
 		nq.showAndWait();
+		
+		updateCategories();
+		
 	}
 	
 	private void startGameButtonClicked()
@@ -199,6 +208,20 @@ public class StartGameDialog extends Dialog{
 		alert.setHeaderText("Information Alert");
 		alert.setContentText(alertMessage);
 		alert.show();
+	}
+	
+	private void updateCategories()
+	{
+		ArrayList<String> availableCategories = db.getAllCategories();
+        
+        ObservableList<String> availableCategoriesList = FXCollections.observableArrayList(
+                availableCategories
+            );
+        
+        redInput.setItems(availableCategoriesList);
+        blueInput.setItems(availableCategoriesList);
+        greenInput.setItems(availableCategoriesList);
+        yellowInput.setItems(availableCategoriesList);
 	}
 	
 

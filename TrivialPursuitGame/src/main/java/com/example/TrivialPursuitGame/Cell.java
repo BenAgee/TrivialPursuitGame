@@ -17,13 +17,9 @@ public class Cell extends MainApp
     private int col;
     private Boolean isRollAgainCell;
     private Boolean isHqCell;
-    private int cellCategoryIndex; // Red = 0, Blue = 1, Green = 2, Yellow = 3
+    public int cellCategoryId;
     private Color cellColor;
     
-//    List<Pair<Integer,Integer>> redCellList;
-//    List<Pair<Integer,Integer>> blueCellList;
-//    List<Pair<Integer,Integer>> greenCellList;
-//    List<Pair<Integer,Integer>> yellowCellList;
  
     public Cell(int row, int col)
     {
@@ -97,7 +93,7 @@ public class Cell extends MainApp
         if((row == 0 && col == 4) || (row == 1 && col == 0) || (row == 1 && col == 8) || (row == 4 && col == 3) || (row == 4 && col == 7) 
         	|| (row == 5 && col == 0) || (row == 5 && col == 8) || (row == 6 && col == 4) || (row == 8 && col == 2) || (row == 8 && col == 6) )
         {
-        	cellCategoryIndex = 0;
+        	
         	cellColor = Color.RED;
         	final String boardStyleStr = "-fx-background-color: red;\n"
             		+ "-fx-border-color: black;\n"
@@ -109,7 +105,7 @@ public class Cell extends MainApp
         else if((row == 0 && col == 2) || (row == 0 && col == 6) || (row == 2 && col == 4) || (row == 3 && col == 0) || (row == 3 && col == 8) 
             	|| (row == 4 && col == 1) || (row == 4 && col == 5) || (row == 7 && col == 0) || (row == 7 && col == 8) || (row == 8 && col == 4) )
         {
-        	cellCategoryIndex = 1;
+        	cellColor = Color.BLUE;
         	final String boardStyleStr = "-fx-background-color: blue;\n"
             		+ "-fx-border-color: black;\n"
             		+ "-fx-border-width: 5;\n";
@@ -119,7 +115,7 @@ public class Cell extends MainApp
         else if((row == 0 && col == 3) || (row == 0 && col == 7) || (row == 2 && col == 0) || (row == 3 && col == 4) || (row == 4 && col == 2) 
         	|| (row == 4 && col == 8) || (row == 6 && col == 0) || (row == 7 && col == 4) || (row == 8 && col == 3) || (row == 8 && col == 7) )
         {
-        	cellCategoryIndex = 2;
+        	
         	cellColor = Color.GREEN;
         	final String boardStyleStr = "-fx-background-color: green;\n"
             		+ "-fx-border-color: black;\n"
@@ -131,7 +127,7 @@ public class Cell extends MainApp
         else if((row == 0 && col == 1) || (row == 0 && col == 5) || (row == 1 && col == 4) || (row == 2 && col == 8) || (row == 4 && col == 0) 
             	|| (row == 4 && col == 6) || (row == 5 && col == 4) || (row == 6 && col == 8) || (row == 8 && col == 1) || (row == 8 && col == 5) )
         {
-        	cellCategoryIndex = 3;
+        	
         	cellColor = Color.YELLOW;
         	final String boardStyleStr = "-fx-background-color: yellow;\n"
             		+ "-fx-border-color: black;\n"
@@ -195,7 +191,7 @@ public class Cell extends MainApp
 
     public void updatePlayerHqTokens(Player player, Color hqTokenColor)
     {
-    	System.out.println("updatePlayerHqTokens called, cellColor: " + cellColor + " cellCategoryIndx: " + cellCategoryIndex);
+    	System.out.println("updatePlayerHqTokens called, cellColor: " + cellColor + " cellCategoryIndx: " + cellCategoryId);
         //cellPane.getChildren().clear();
         
     	
@@ -269,9 +265,9 @@ public class Cell extends MainApp
     {
     	return isHqCell;
     }
-    public int getCellCategoryIndex()
+    public int getCellCategoryId()
     {
-    	return cellCategoryIndex;
+    	return cellCategoryId;
     }
     
     public Color getCellColor()

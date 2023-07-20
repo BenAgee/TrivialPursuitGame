@@ -1,25 +1,20 @@
 package com.example.TrivialPursuitGame;
 
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.stage.Modality;
+import java.util.Map;
+import java.util.HashMap;
 
 import javafx.scene.control.Dialog;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 
 public class QuestionDialog extends Dialog{
 	
 	String questionCategory;
 	Boolean answerCorrect = false;
-	String questionStr = "";
+	String questionStr;
 	String answerStr = "";
 	Label answerResultLabel;
 	
@@ -27,41 +22,41 @@ public class QuestionDialog extends Dialog{
 	Button incorrectButton;
 	Button displayAnswerButton;
 	
-	public QuestionDialog(String category)
+	DBConnection db;
+	
+	public QuestionDialog(int catId)
 	{
 		super(); // invokes constructor of the Dialog class
-		questionCategory = category;
+		int category_id = catId;
 		answerResultLabel = new Label("initial answer");
 		
+		db = new DBConnection();
+		
 		this.setTitle("Question Dialog");
-		buildUI();
 		
-		
+		Map<String, String> QApair = db.getQuestion(category_id);
         
     	// get question from db in table corresponding to category
-    	// get random question from table (check against already asked questions to not repeat.
-    	// track index of questions already asked to avoid repeats
+    	// get random question from table
+    	// TODO track index of questions already asked to avoid repeats
         
-        questionStr = "sample question?";
-        answerStr = "sample answer";
+        questionStr = QApair.keySet().toArray()[0].toString();
+        answerStr = QApair.values().toArray()[0].toString();
         
-        //questionLabel.setText(questionStr);
-        
+        buildUI();
+         
 	}
 	
 	private void buildUI()
 	{
 		// Create the question label
-        Label questionLabel = new Label("Is JavaFX a framework for building user interfaces?");
-        
+        Label questionLabel = new Label(questionStr);
         
         Label answerLabel = new Label("Answer: ");
         
         HBox answerBox = new HBox(10);
         answerBox.setPadding(new Insets(10));
         answerBox.getChildren().addAll(answerLabel, answerResultLabel);
-        
-        
         
         // Create the buttons
         correctButton = new Button("Correct");
@@ -86,7 +81,6 @@ public class QuestionDialog extends Dialog{
         
         getDialogPane().getScene().getWindow().setOnCloseRequest(event -> this.close());
 
-        
         getDialogPane().setContent(mainBox);
         
 	}

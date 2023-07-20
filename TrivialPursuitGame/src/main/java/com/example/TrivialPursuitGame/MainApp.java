@@ -22,7 +22,7 @@ import java.util.Random;
 public class MainApp extends Application
 {
 
-    private LinkedList<String> categoryList = new LinkedList<>();
+    //private LinkedList<String> categoryList = new LinkedList<>();
     
     private String redCategory;
     private String blueCategory;
@@ -50,6 +50,8 @@ public class MainApp extends Application
     private Button moveRightButton;
     
     private Stage primaryStage;
+    
+    DBConnection db;
 
     public static void main(String[] args)
     {
@@ -70,7 +72,7 @@ public class MainApp extends Application
         allPlayers = new ArrayList<>();
         currentPlayerIndex = 0;
         
-        
+        db = new DBConnection();
 
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(10));
@@ -95,6 +97,8 @@ public class MainApp extends Application
         greenCategory = sgd.greenCategoryName;
         yellowCategory = sgd.yellowCategoryName;
         
+        System.out.println("category names: "+ redCategory + ", " + blueCategory + ", " + yellowCategory + ", " +greenCategory);
+        
         for(int playerCnt = 0; playerCnt < sgd.playerNameList.size(); playerCnt ++)
         {
         	Color playerColor = getPlayerColorFromInt(playerCnt);
@@ -102,24 +106,15 @@ public class MainApp extends Application
 
         	addPlayer(playerName, playerColor);
         }
+        
+        // set categories based on input from game start dialog that still needs to be made
+        setCategories();
 
         Scene scene = new Scene(root, 800, 800);
         
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
-        
-        // Add Dialog to ask how many players want to play. Enter Players Names, then add players below.
-
-        //addPlayer("Player 1-Red", Color.RED);
-        //addPlayer("Player 2-Blue", Color.BLUE);
-        //addPlayer("Player 3-Green", Color.GREEN);
-       // addPlayer("Player 4-Yellow", Color.YELLOW);
-        
-        // set categories based on input from game start dialog that still needs to be made
-        
-        
-        setCategories();
         
         Random rand = new Random();
         if(allPlayers.size()>1)
@@ -192,7 +187,7 @@ public class MainApp extends Application
         Random rand = new Random();
         rollNumber = rand.nextInt(6) + 1;
         
-        rollNumber = 4; // used for troubleshooting
+        //rollNumber = 4; // used for troubleshooting
         
         setValidMovementDirections();
 
@@ -239,7 +234,7 @@ public class MainApp extends Application
     			if(!currentCell.getIsRollAgainCell())
     			{
     				// launch question dialog
-    				QuestionDialog questionDialog = new QuestionDialog(categoryList.get(currentCell.getCellCategoryIndex()));
+    				QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
     				questionDialog.showAndWait();
     				
     				answerCorrect = questionDialog.answerCorrect;
@@ -309,7 +304,7 @@ public class MainApp extends Application
 			if(!currentCell.getIsRollAgainCell())
 			{
 				// launch question dialog
-				QuestionDialog questionDialog = new QuestionDialog(categoryList.get(currentCell.getCellCategoryIndex()));
+				QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
 				questionDialog.showAndWait();
 				
 				answerCorrect = questionDialog.answerCorrect;
@@ -374,7 +369,7 @@ public class MainApp extends Application
 			if(!currentCell.getIsRollAgainCell())
 			{
 				// launch question dialog
-				QuestionDialog questionDialog = new QuestionDialog(categoryList.get(currentCell.getCellCategoryIndex()));
+				QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
 				questionDialog.showAndWait();
 				
 				answerCorrect = questionDialog.answerCorrect;
@@ -441,7 +436,7 @@ public class MainApp extends Application
 			if(!currentCell.getIsRollAgainCell())
 			{
 				// launch question dialog
-				QuestionDialog questionDialog = new QuestionDialog(categoryList.get(currentCell.getCellCategoryIndex()));
+				QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
 				questionDialog.showAndWait();
 				
 				answerCorrect = questionDialog.answerCorrect;
@@ -741,11 +736,60 @@ public class MainApp extends Application
     
     public void setCategories()
     {
-    	categoryList.clear();
-    	categoryList.add(redCategory);
-    	categoryList.add(blueCategory);
-    	categoryList.add(greenCategory);
-    	categoryList.add(yellowCategory);
+//    	categoryList.clear();
+//    	categoryList.add(redCategory);
+//    	categoryList.add(blueCategory);
+//    	categoryList.add(greenCategory);
+//    	categoryList.add(yellowCategory);
+    	
+    	LinkedList<Integer> validColumnsAndRows = new LinkedList<>();
+    	
+    	validColumnsAndRows.add(0);
+        validColumnsAndRows.add(4);
+        validColumnsAndRows.add(8);
+    	
+    	for (int col = 0; col < 9; col++)
+        {
+            for (int row = 0; row < 9; row++)
+            {
+                
+                // Valid board cells and scorboard cells;
+                if(validColumnsAndRows.contains(row) || validColumnsAndRows.contains(col))
+                {
+                	currentCell = board.getCells()[row][col];
+                	
+                	String categoryName = "None"; // could be center or roll again cell
+                	
+                	Color cellColor = currentCell.getCellColor();
+                	
+                	if(cellColor == Color.RED)
+                	{
+                		categoryName = redCategory;
+                	}
+                	else if(cellColor == Color.BLUE)
+                	{
+                		categoryName = blueCategory;
+                	}
+                	else if(cellColor == Color.GREEN)
+                	{
+                		categoryName = greenCategory;
+                	}
+                	else if(cellColor == Color.YELLOW)
+                	{
+                		categoryName = yellowCategory;
+                	}
+                	
+                	if(!categoryName.contentEquals("None"))
+                	{
+                		currentCell.cellCategoryId = db.getCategoryIdFromName(categoryName);
+                    	//System.out.println("set cat id: " + currentCell.cellCategoryId);
+                	}
+                	
+                	
+                }
+                
+            }
+        }
     	
     }
     

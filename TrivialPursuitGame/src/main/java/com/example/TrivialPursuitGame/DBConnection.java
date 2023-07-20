@@ -2,6 +2,8 @@ package com.example.TrivialPursuitGame;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 class DBConnection{  
 	static Connection con;
@@ -96,6 +98,60 @@ class DBConnection{
 		}
 		
 		return categories;
+	}
+	
+	public Map<String, String> getQuestion(int category_id)
+	{
+		Map<String, String> QApair = new HashMap<String, String>();
+		
+		System.out.println("cat id:" + category_id);
+		// gets a random question and answer corresponding to the chosen category
+		String qryStr = "Select question, answer from questions Where category_id = " + category_id + " order by rand() limit 1;";
+		
+		System.out.println(qryStr);
+		
+		try {
+			Statement stmt = con.createStatement();  
+			ResultSet rs = stmt.executeQuery(qryStr);
+			
+			rs.next(); // get first row in result set, should only have one row
+			
+			String question = rs.getString(1);
+			String answer = rs.getString(2);
+			System.out.println(question +", "+ answer);
+			
+			QApair.put(question, answer);
+
+			
+		} catch (Exception e) { 
+			System.out.println(e);
+		}
+		
+		return QApair;
+	}
+	
+	public int getCategoryIdFromName(String categoryName)
+	{
+		int catId = 0;
+		
+		String qryStr = "Select category_id from categories Where name=\'" + categoryName + "\';";
+		
+		//System.out.println(qryStr);
+		
+		try {
+			Statement stmt = con.createStatement();  
+			ResultSet rs = stmt.executeQuery(qryStr);
+			
+			rs.next(); // get first row in result set, should only have one row
+			
+			catId = rs.getInt(1);
+			
+			
+		} catch (Exception e) { 
+			System.out.println(e);
+		}
+		
+		return catId;
 	}
 	
 	private Connection connectDB() {
