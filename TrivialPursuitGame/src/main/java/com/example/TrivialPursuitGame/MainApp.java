@@ -80,9 +80,9 @@ public class MainApp extends Application
         root.setCenter(board.getBoardPane());
         root.setBottom(createFooter());
         
-        Boolean useSGD = false;
+        Boolean useSGD = true; // used for troubleshooting to skip sgd to save time
 
-        // used for troubleshooting to skip sgd to save time
+        
         if(useSGD)
         {
 	        StartGameDialog sgd = new StartGameDialog();
@@ -204,9 +204,9 @@ public class MainApp extends Application
     private void rollButtonClicked()
     {
         Random rand = new Random();
-        //rollNumber = rand.nextInt(6) + 1;
+        rollNumber = rand.nextInt(6) + 1;
         
-        rollNumber = 4; // used for troubleshooting
+        //rollNumber = 4; // used for troubleshooting
         
         setValidMovementDirections();
 
@@ -260,47 +260,12 @@ public class MainApp extends Application
     				// center cell, choose category dialog first
     				if(newRow == 4 && newCol == 4)
     				{
-    					ChooseCategoryDialog ccd = new ChooseCategoryDialog();
-    					
-    					ccd.showAndWait();
-    					
-    					// launch question dialog
-    					QuestionDialog questionDialog = new QuestionDialog(ccd.chosenCategoryId);
-    					questionDialog.showAndWait();
-    					
-    					if(questionDialog.answerCorrect)
-    					{
-    						// Game over we have a winner, launch dialog
-    						String gameOverMessage = "Congradulations" + currentPlayer.getName() + "You Won!";
-    						sendInfoAlert(gameOverMessage);
-    						disableButtonsEndgame();
-    					}
-    					else
-    					{
-    						changePlayers();
-    					}
+    					launchEndgameSequence();
     					
     				}
     				else
     				{
-	    				// launch question dialog
-	    				QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
-	    				questionDialog.showAndWait();
-	    				
-	    				answerCorrect = questionDialog.answerCorrect;
-	    				if(!answerCorrect)
-	    				{
-	    					changePlayers();
-	    				}
-	    				else
-	    				{
-	    					if(currentCell.getIsHqCell()  && answerCorrect)
-	    					{
-	    						//Before we change, update players scoreboard
-	    						managePlayerScoreboard();
-	    					}
-	    					resetBoard();
-	    				}
+    					launchQuestionSequence();
 	    				
     				}
     				
@@ -364,47 +329,12 @@ public class MainApp extends Application
 				// center cell, choose category dialog first
 				if(newRow == 4 && newCol == 4)
 				{
-					ChooseCategoryDialog ccd = new ChooseCategoryDialog();
-					
-					ccd.showAndWait();
-					
-					// launch question dialog
-					QuestionDialog questionDialog = new QuestionDialog(ccd.chosenCategoryId);
-					questionDialog.showAndWait();
-					
-					if(questionDialog.answerCorrect)
-					{
-						// Game over we have a winner, launch dialog
-						String gameOverMessage = "Congradulations" + currentPlayer.getName() + "You Won!";
-						sendInfoAlert(gameOverMessage);
-						disableButtonsEndgame();
-					}
-					else
-					{
-						changePlayers();
-					}
+					launchEndgameSequence();
 					
 				}
 				else
 				{
-					// launch question dialog
-					QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
-					questionDialog.showAndWait();
-					
-					answerCorrect = questionDialog.answerCorrect;
-					if(!answerCorrect)
-					{
-						changePlayers();
-					}
-					else
-					{
-						if(currentCell.getIsHqCell()  && answerCorrect)
-						{
-							//Before we change, update players scoreboard
-							managePlayerScoreboard();
-						}
-						resetBoard();
-					}
+					launchQuestionSequence();
 					
 				}
 			
@@ -461,47 +391,12 @@ public class MainApp extends Application
 				// center cell, choose category dialog first
 				if(newRow == 4 && newCol == 4)
 				{
-					ChooseCategoryDialog ccd = new ChooseCategoryDialog();
 					
-					ccd.showAndWait();
-					
-					// launch question dialog
-					QuestionDialog questionDialog = new QuestionDialog(ccd.chosenCategoryId);
-					questionDialog.showAndWait();
-					
-					if(questionDialog.answerCorrect)
-					{
-						// Game over we have a winner, launch dialog
-						String gameOverMessage = "Congradulations" + currentPlayer.getName() + "You Won!";
-						sendInfoAlert(gameOverMessage);
-						disableButtonsEndgame();
-					}
-					else
-					{
-						changePlayers();
-					}
-					
+					launchEndgameSequence();
 				}
 				else
 				{
-					// launch question dialog
-					QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
-					questionDialog.showAndWait();
-					
-					answerCorrect = questionDialog.answerCorrect;
-					if(!answerCorrect)
-					{
-						changePlayers();
-					}
-					else
-					{
-						if(currentCell.getIsHqCell()  && answerCorrect)
-						{
-							//Before we change, update players scoreboard
-							managePlayerScoreboard();
-						}
-						resetBoard();
-					}
+					launchQuestionSequence();
 				}
 			
 			}
@@ -558,47 +453,12 @@ public class MainApp extends Application
 				// center cell, choose category dialog first
 				if(newRow == 4 && newCol == 4)
 				{
-					ChooseCategoryDialog ccd = new ChooseCategoryDialog();
-					
-					ccd.showAndWait();
-					
-					// launch question dialog
-					QuestionDialog questionDialog = new QuestionDialog(ccd.chosenCategoryId);
-					questionDialog.showAndWait();
-					
-					if(questionDialog.answerCorrect)
-					{
-						// Game over we have a winner, launch dialog
-						String gameOverMessage = "Congradulations " + currentPlayer.getName() + " You Won!";
-						sendInfoAlert(gameOverMessage);
-						disableButtonsEndgame();
-					}
-					else
-					{
-						changePlayers();
-					}
+					launchEndgameSequence();
 					
 				}
 				else
 				{
-					// launch question dialog
-					QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
-					questionDialog.showAndWait();
-				
-					answerCorrect = questionDialog.answerCorrect;
-					if(!answerCorrect)
-					{
-						changePlayers();
-					}
-					else
-					{
-						if(currentCell.getIsHqCell() && answerCorrect)
-						{
-							//Before we change, update players scoreboard
-							managePlayerScoreboard();
-						}
-						resetBoard();
-					}
+					launchQuestionSequence();
 				
 				}
 			
@@ -834,9 +694,18 @@ public class MainApp extends Application
 		
 		currentCell = board.getCells()[currentPlayer.getRow()][currentPlayer.getCol()];
 		
+		
+		
 		currentCell.setCellStyle();
 		
 		System.out.println("new cell in change players, row:" + currentPlayer.getRow() + " col: " + currentPlayer.getCol() + " color: " + currentPlayer.getColor());
+		
+		if(currentCell.isCenterCell())
+		{
+			rollButton.setDisable(true);
+			launchEndgameSequence();
+		}
+		
 	}
 	
 	
@@ -997,7 +866,7 @@ public class MainApp extends Application
     	}
     	else if(player.getColor() == Color.BLUE)
     	{
-    		Cell nameCell = board.getCells()[1][5];
+    		Cell nameCell = board.getCells()[1][6];
     		nameCell.formatScoreboardName(player.getName());
     	}
     	else if(player.getColor() == Color.GREEN)
@@ -1011,5 +880,49 @@ public class MainApp extends Application
     		nameCell.formatScoreboardName(player.getName());
     	}
     }
+    
+    private void launchEndgameSequence()
+    {
+    	ChooseCategoryDialog ccd = new ChooseCategoryDialog();
+		
+		ccd.showAndWait();
+		
+		// launch question dialog
+		QuestionDialog questionDialog = new QuestionDialog(ccd.chosenCategoryId);
+		questionDialog.showAndWait();
+		
+		if(questionDialog.answerCorrect)
+		{
+			// Game over we have a winner, launch dialog
+			String gameOverMessage = "Congradulations " + currentPlayer.getName() + " You Won!";
+			sendInfoAlert(gameOverMessage);
+			disableButtonsEndgame();
+		}
+		else
+		{
+			changePlayers();
+		}
+    }
 
+    private void launchQuestionSequence()
+    {
+    	// launch question dialog
+		QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
+		questionDialog.showAndWait();
+		
+		answerCorrect = questionDialog.answerCorrect;
+		if(!answerCorrect)
+		{
+			changePlayers();
+		}
+		else
+		{
+			if(currentCell.getIsHqCell()  && answerCorrect)
+			{
+				//Before we change, update players scoreboard
+				managePlayerScoreboard();
+			}
+			resetBoard();
+		}
+    }
 }

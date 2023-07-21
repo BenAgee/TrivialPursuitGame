@@ -24,6 +24,7 @@ public class Cell extends MainApp
     private int cellCategoryId;
     private String categoryStr;
     private Color cellColor;
+    private Boolean isCenterCell;
     
     public Cell(int row, int col)
     {
@@ -33,6 +34,8 @@ public class Cell extends MainApp
         isRollAgainCell = false;
         cellPane = new StackPane();
         cellPlayers = new ArrayList<>();
+        
+        isCenterCell = false;
         
         setCellStyle();
     }
@@ -64,7 +67,8 @@ public class Cell extends MainApp
             		+ "-fx-border-color: black;\n"
             		+ "-fx-border-width: 5;\n";
         	
-
+        	isCenterCell = true;
+        	
             cellPane.setStyle(styleStr);
             Label centerLabel = new Label("TCG");
             centerLabel.setTextFill(Color.WHITE);
@@ -203,6 +207,24 @@ public class Cell extends MainApp
             Circle playerToken = new Circle(10, player.getColor());
             playerToken.setStyle(styleStr);
             cellPane.getChildren().add(playerToken);
+            
+            if(player.getColor() == Color.RED)
+            {
+            	StackPane.setAlignment(playerToken, Pos.TOP_LEFT);
+            }
+            else if(player.getColor() == Color.BLUE)
+            {
+            	StackPane.setAlignment(playerToken, Pos.BOTTOM_RIGHT);
+            }
+            else if(player.getColor() == Color.GREEN)
+            {
+            	StackPane.setAlignment(playerToken, Pos.BOTTOM_LEFT);
+            }
+            else if(player.getColor() == Color.YELLOW)
+            {
+            	StackPane.setAlignment(playerToken, Pos.TOP_RIGHT);
+            }
+            
         }
         
     }
@@ -212,44 +234,49 @@ public class Cell extends MainApp
     	System.out.println("updatePlayerHqTokens called, cellColor: " + cellColor + " cellCategoryIndx: " + cellCategoryId);
         //cellPane.getChildren().clear();
         
-    	
+    	double hqTokenWidth = 37.5;
+    	double hqTokenHeight = 35;
         if(hqTokenColor == Color.RED)
 		{
         	System.out.println("got red player to add HQ token");
         	//color top left child red
-        	Rectangle playerToken = new Rectangle(10,10,30,30);
+        	Rectangle playerToken = new  Rectangle(hqTokenWidth, hqTokenHeight);
 //        	final String styleStr = "-fx-background-color: red;\n"
 //            		+ "-fx-border-color: black;\n"
 //            		+ "-fx-border-width: 1;\n";
 //        	playerToken.setStyle(styleStr);
         	playerToken.setFill(Color.RED);
         	cellPane.getChildren().add(playerToken);
+        	StackPane.setAlignment(playerToken, Pos.TOP_LEFT);
         	player.collectHqToken(Color.RED);
 			
 		}
 		if(hqTokenColor == Color.BLUE)
 		{
 			//color bottom right child cell blue
-			Rectangle playerToken = new Rectangle(40,35,30,30);
+			Rectangle playerToken = new Rectangle(hqTokenWidth, hqTokenHeight);
         	playerToken.setFill(Color.BLUE);
         	cellPane.getChildren().add(playerToken);
+        	StackPane.setAlignment(playerToken, Pos.BOTTOM_RIGHT);
         	player.collectHqToken(Color.BLUE);
 		}
 		if(hqTokenColor == Color.GREEN)
 		{
 			//color bottom left child green
-			Rectangle playerToken = new Rectangle(10,35,30,30);
+			Rectangle playerToken = new Rectangle(hqTokenWidth, hqTokenHeight);
         	playerToken.setFill(Color.GREEN);
         	cellPane.getChildren().add(playerToken);
+        	StackPane.setAlignment(playerToken, Pos.BOTTOM_LEFT);
         	player.collectHqToken(Color.GREEN);
 			
 		}
 		if(hqTokenColor == Color.YELLOW)
 		{
 			//color top right child cell yellow
-			Rectangle playerToken = new Rectangle(45,10,30,30);
+			Rectangle playerToken = new Rectangle(hqTokenWidth, hqTokenHeight);
         	playerToken.setFill(Color.YELLOW);
         	cellPane.getChildren().add(playerToken);
+        	StackPane.setAlignment(playerToken, Pos.TOP_RIGHT);
         	player.collectHqToken(Color.YELLOW);
 		}
 		player.checkIfPlayerHasAllHqTokens();
@@ -316,6 +343,11 @@ public class Cell extends MainApp
     public void setCategory(String category)
     {
     	categoryStr = category;
+    }
+    
+    public Boolean isCenterCell()
+    {
+    	return isCenterCell;
     }
     
 }
