@@ -6,7 +6,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.util.Map;
-import java.util.HashMap;
 
 import javafx.scene.control.Dialog;
 

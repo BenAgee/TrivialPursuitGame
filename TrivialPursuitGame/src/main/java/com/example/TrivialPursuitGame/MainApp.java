@@ -4,19 +4,18 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import javafx.scene.control.Dialog;
 
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 public class MainApp extends Application
@@ -39,7 +38,8 @@ public class MainApp extends Application
 
     private Label currentPlayerLabel;
     private Label categoryLabel;
-    private Label questionLabel;
+    private Label currentCategoryLabel;
+    //private Label questionLabel;
     private Label rollNumberLabel;
     private Button rollButton;
     private int rollNumber;   
@@ -79,32 +79,50 @@ public class MainApp extends Application
         root.setTop(createHeader());
         root.setCenter(board.getBoardPane());
         root.setBottom(createFooter());
+        
+        Boolean useSGD = false;
 
-        StartGameDialog sgd = new StartGameDialog();
-        sgd.showAndWait();
-        
-        System.out.println("added players: " + sgd.playerNameList);
-        System.out.println("chosen category for red: " + sgd.redCategoryName);
-        System.out.println("valid game: " + sgd.validGameParameters);
-        
-        if(!sgd.validGameParameters)
+        // used for troubleshooting to skip sgd to save time
+        if(useSGD)
         {
-        	return;
+	        StartGameDialog sgd = new StartGameDialog();
+	        sgd.showAndWait();
+	        
+	        System.out.println("added players: " + sgd.playerNameList);
+	        System.out.println("chosen category for red: " + sgd.redCategoryName);
+	        System.out.println("valid game: " + sgd.validGameParameters);
+	        
+	        if(!sgd.validGameParameters)
+	        {
+	        	return;
+	        }
+	        
+	        redCategory = sgd.redCategoryName;
+	        blueCategory = sgd.blueCategoryName;
+	        greenCategory = sgd.greenCategoryName;
+	        yellowCategory = sgd.yellowCategoryName;
+	        
+	        
+	        
+	        System.out.println("category names: "+ redCategory + ", " + blueCategory + ", " + yellowCategory + ", " +greenCategory);
+	        
+	        for(int playerCnt = 0; playerCnt < sgd.playerNameList.size(); playerCnt ++)
+	        {
+	        	Color playerColor = getPlayerColorFromInt(playerCnt);
+	        	String playerName = sgd.playerNameList.get(playerCnt);
+	
+	        	addPlayer(playerName, playerColor);
+	        }
         }
-        
-        redCategory = sgd.redCategoryName;
-        blueCategory = sgd.blueCategoryName;
-        greenCategory = sgd.greenCategoryName;
-        yellowCategory = sgd.yellowCategoryName;
-        
-        System.out.println("category names: "+ redCategory + ", " + blueCategory + ", " + yellowCategory + ", " +greenCategory);
-        
-        for(int playerCnt = 0; playerCnt < sgd.playerNameList.size(); playerCnt ++)
+        else
         {
-        	Color playerColor = getPlayerColorFromInt(playerCnt);
-        	String playerName = sgd.playerNameList.get(playerCnt);
-
-        	addPlayer(playerName, playerColor);
+        	// defaults i've kept in the db for testing
+        	redCategory = "sports";
+	        blueCategory = "math";
+	        greenCategory = "capitals";
+	        yellowCategory = "science";
+	        
+	        addPlayer("player1", Color.RED);
         }
         
         // set categories based on input from game start dialog that still needs to be made
@@ -128,6 +146,7 @@ public class MainApp extends Application
         
         currentCell = board.getCells()[currentPlayer.getRow()][currentPlayer.getCol()];
         
+        currentCategoryLabel.setText(currentCell.getCellCategory());        
     }
 
     private HBox createHeader()
@@ -138,14 +157,14 @@ public class MainApp extends Application
 
         currentPlayerLabel = new Label();
         currentPlayerLabel.setStyle("-fx-font-size: 18px;");
-        categoryLabel = new Label();
+        categoryLabel = new Label("Category: ");
         categoryLabel.setStyle("-fx-font-size: 18px;");
-        questionLabel = new Label();
-        questionLabel.setWrapText(true);
-        questionLabel.setStyle("-fx-font-size: 14px;");
-        questionLabel.setMaxWidth(200);
+        currentCategoryLabel = new Label();
+        currentCategoryLabel.setStyle("-fx-font-size: 18px;");
+        //questionLabel.setStyle("-fx-font-size: 14px;");
+        //questionLabel.setMaxWidth(200);
 
-        headerBox.getChildren().addAll(currentPlayerLabel, categoryLabel, questionLabel);
+        headerBox.getChildren().addAll(currentPlayerLabel, categoryLabel, currentCategoryLabel);
         return headerBox;
     }
 
@@ -185,9 +204,9 @@ public class MainApp extends Application
     private void rollButtonClicked()
     {
         Random rand = new Random();
-        rollNumber = rand.nextInt(6) + 1;
+        //rollNumber = rand.nextInt(6) + 1;
         
-        //rollNumber = 4; // used for troubleshooting
+        rollNumber = 4; // used for troubleshooting
         
         setValidMovementDirections();
 
@@ -230,35 +249,68 @@ public class MainApp extends Application
     		}
     		else
     		{
+    			if(currentPlayer.getHasAllHqTokens() && newRow < 4)
+    			{
+    				newRow = 4;
+    			}
     			movePiece(currentRow, currentCol, newRow, newCol);
     			if(!currentCell.getIsRollAgainCell())
     			{
-    				// launch question dialog
-    				QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
-    				questionDialog.showAndWait();
     				
-    				answerCorrect = questionDialog.answerCorrect;
-    				if(!answerCorrect)
+    				// center cell, choose category dialog first
+    				if(newRow == 4 && newCol == 4)
     				{
-    					changePlayers();
+    					ChooseCategoryDialog ccd = new ChooseCategoryDialog();
+    					
+    					ccd.showAndWait();
+    					
+    					// launch question dialog
+    					QuestionDialog questionDialog = new QuestionDialog(ccd.chosenCategoryId);
+    					questionDialog.showAndWait();
+    					
+    					if(questionDialog.answerCorrect)
+    					{
+    						// Game over we have a winner, launch dialog
+    						String gameOverMessage = "Congradulations" + currentPlayer.getName() + "You Won!";
+    						sendInfoAlert(gameOverMessage);
+    						disableButtonsEndgame();
+    					}
+    					else
+    					{
+    						changePlayers();
+    					}
+    					
     				}
     				else
     				{
-    					if(currentCell.getIsHqCell()  && answerCorrect)
-    					{
-    						//Before we change, update players scoreboard
-    						managePlayerScoreboard();
-    					}
-    					resetBoard();
+	    				// launch question dialog
+	    				QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
+	    				questionDialog.showAndWait();
+	    				
+	    				answerCorrect = questionDialog.answerCorrect;
+	    				if(!answerCorrect)
+	    				{
+	    					changePlayers();
+	    				}
+	    				else
+	    				{
+	    					if(currentCell.getIsHqCell()  && answerCorrect)
+	    					{
+	    						//Before we change, update players scoreboard
+	    						managePlayerScoreboard();
+	    					}
+	    					resetBoard();
+	    				}
+	    				
     				}
+    				
     			}
     			else
     			{
     				resetBoard();
     			}
+    			
     		}
-    	
-    	
     		
     }
     
@@ -298,28 +350,62 @@ public class MainApp extends Application
 		}
 		else
 		{
+			if(currentPlayer.getHasAllHqTokens() && newRow > 4)
+			{
+				newRow = 4;
+			}
+			
 			movePiece(currentRow, currentCol, newRow, newCol);
 			
 			System.out.println("currentCell color after movePiece:" + currentCell.getCellColor());
 			if(!currentCell.getIsRollAgainCell())
 			{
-				// launch question dialog
-				QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
-				questionDialog.showAndWait();
 				
-				answerCorrect = questionDialog.answerCorrect;
-				if(!answerCorrect)
+				// center cell, choose category dialog first
+				if(newRow == 4 && newCol == 4)
 				{
-					changePlayers();
+					ChooseCategoryDialog ccd = new ChooseCategoryDialog();
+					
+					ccd.showAndWait();
+					
+					// launch question dialog
+					QuestionDialog questionDialog = new QuestionDialog(ccd.chosenCategoryId);
+					questionDialog.showAndWait();
+					
+					if(questionDialog.answerCorrect)
+					{
+						// Game over we have a winner, launch dialog
+						String gameOverMessage = "Congradulations" + currentPlayer.getName() + "You Won!";
+						sendInfoAlert(gameOverMessage);
+						disableButtonsEndgame();
+					}
+					else
+					{
+						changePlayers();
+					}
+					
 				}
 				else
 				{
-					if(currentCell.getIsHqCell()  && answerCorrect)
+					// launch question dialog
+					QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
+					questionDialog.showAndWait();
+					
+					answerCorrect = questionDialog.answerCorrect;
+					if(!answerCorrect)
 					{
-						//Before we change, update players scoreboard
-						managePlayerScoreboard();
+						changePlayers();
 					}
-					resetBoard();
+					else
+					{
+						if(currentCell.getIsHqCell()  && answerCorrect)
+						{
+							//Before we change, update players scoreboard
+							managePlayerScoreboard();
+						}
+						resetBoard();
+					}
+					
 				}
 			
 			}
@@ -329,8 +415,6 @@ public class MainApp extends Application
 			}
 		}	
 		
-		
-        
     }
 	
 	private void moveRight()
@@ -365,26 +449,59 @@ public class MainApp extends Application
 		}
 		else
 		{
+			if(currentPlayer.getHasAllHqTokens() && newCol > 4)
+			{
+				newCol = 4;
+			}
+			
 			movePiece(currentRow, currentCol, currentRow, newCol);
 			if(!currentCell.getIsRollAgainCell())
 			{
-				// launch question dialog
-				QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
-				questionDialog.showAndWait();
 				
-				answerCorrect = questionDialog.answerCorrect;
-				if(!answerCorrect)
+				// center cell, choose category dialog first
+				if(newRow == 4 && newCol == 4)
 				{
-					changePlayers();
+					ChooseCategoryDialog ccd = new ChooseCategoryDialog();
+					
+					ccd.showAndWait();
+					
+					// launch question dialog
+					QuestionDialog questionDialog = new QuestionDialog(ccd.chosenCategoryId);
+					questionDialog.showAndWait();
+					
+					if(questionDialog.answerCorrect)
+					{
+						// Game over we have a winner, launch dialog
+						String gameOverMessage = "Congradulations" + currentPlayer.getName() + "You Won!";
+						sendInfoAlert(gameOverMessage);
+						disableButtonsEndgame();
+					}
+					else
+					{
+						changePlayers();
+					}
+					
 				}
 				else
 				{
-					if(currentCell.getIsHqCell()  && answerCorrect)
+					// launch question dialog
+					QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
+					questionDialog.showAndWait();
+					
+					answerCorrect = questionDialog.answerCorrect;
+					if(!answerCorrect)
 					{
-						//Before we change, update players scoreboard
-						managePlayerScoreboard();
+						changePlayers();
 					}
-					resetBoard();
+					else
+					{
+						if(currentCell.getIsHqCell()  && answerCorrect)
+						{
+							//Before we change, update players scoreboard
+							managePlayerScoreboard();
+						}
+						resetBoard();
+					}
 				}
 			
 			}
@@ -394,7 +511,6 @@ public class MainApp extends Application
 			}
     		
         }
-		
 		
     }
 	
@@ -432,26 +548,58 @@ public class MainApp extends Application
 		}
 		else
 		{
+			if(currentPlayer.getHasAllHqTokens() && newCol < 4)
+			{
+				newCol = 4;
+			}
 			movePiece(currentRow, currentCol, currentRow, newCol);
 			if(!currentCell.getIsRollAgainCell())
 			{
-				// launch question dialog
-				QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
-				questionDialog.showAndWait();
-				
-				answerCorrect = questionDialog.answerCorrect;
-				if(!answerCorrect)
+				// center cell, choose category dialog first
+				if(newRow == 4 && newCol == 4)
 				{
-					changePlayers();
+					ChooseCategoryDialog ccd = new ChooseCategoryDialog();
+					
+					ccd.showAndWait();
+					
+					// launch question dialog
+					QuestionDialog questionDialog = new QuestionDialog(ccd.chosenCategoryId);
+					questionDialog.showAndWait();
+					
+					if(questionDialog.answerCorrect)
+					{
+						// Game over we have a winner, launch dialog
+						String gameOverMessage = "Congradulations " + currentPlayer.getName() + " You Won!";
+						sendInfoAlert(gameOverMessage);
+						disableButtonsEndgame();
+					}
+					else
+					{
+						changePlayers();
+					}
+					
 				}
 				else
 				{
-					if(currentCell.getIsHqCell()  && answerCorrect)
+					// launch question dialog
+					QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
+					questionDialog.showAndWait();
+				
+					answerCorrect = questionDialog.answerCorrect;
+					if(!answerCorrect)
 					{
-						//Before we change, update players scoreboard
-						managePlayerScoreboard();
+						changePlayers();
 					}
-					resetBoard();
+					else
+					{
+						if(currentCell.getIsHqCell() && answerCorrect)
+						{
+							//Before we change, update players scoreboard
+							managePlayerScoreboard();
+						}
+						resetBoard();
+					}
+				
 				}
 			
 			}
@@ -461,9 +609,7 @@ public class MainApp extends Application
 			}
 			
 		}
-		
-		
-        
+
     }
 	
 	private void movePiece(int currentRow, int currentCol, int newRow, int newCol)
@@ -485,8 +631,11 @@ public class MainApp extends Application
         
         currentCell.setCellStyle();
         
+        currentCategoryLabel.setText(currentCell.getCellCategory());
+        
         System.out.println("currentCell color at end of movePiece: " + currentCell.getCellColor());
 	}
+	
 	
 	private void disableMoveButtons()
 	{
@@ -496,12 +645,14 @@ public class MainApp extends Application
   		moveRightButton.setDisable(true);
 	}
 	
+	
 	private void resetBoard()
 	{
 		disableMoveButtons();
 		rollButton.setDisable(false);
 		rollNumberLabel.setText("");
 	}
+	
 	
 	
 	private void setValidMovementDirections()
@@ -670,6 +821,7 @@ public class MainApp extends Application
 		
 	}
 	
+	
 	private void changePlayers()
 	{
 
@@ -686,6 +838,7 @@ public class MainApp extends Application
 		
 		System.out.println("new cell in change players, row:" + currentPlayer.getRow() + " col: " + currentPlayer.getCol() + " color: " + currentPlayer.getColor());
 	}
+	
 	
 	public void managePlayerScoreboard()
 	{
@@ -727,7 +880,11 @@ public class MainApp extends Application
         allPlayers.add(player);
         board.addPlayer(player);
         currentPlayer = player;
+        
+        addPlayerNameToScoreboardCell(player);
+        
     }
+    
     
     public int getCurrentPlayerIndex()
     {
@@ -736,11 +893,6 @@ public class MainApp extends Application
     
     public void setCategories()
     {
-//    	categoryList.clear();
-//    	categoryList.add(redCategory);
-//    	categoryList.add(blueCategory);
-//    	categoryList.add(greenCategory);
-//    	categoryList.add(yellowCategory);
     	
     	LinkedList<Integer> validColumnsAndRows = new LinkedList<>();
     	
@@ -765,23 +917,27 @@ public class MainApp extends Application
                 	if(cellColor == Color.RED)
                 	{
                 		categoryName = redCategory;
+                		currentCell.setCategory(categoryName);
                 	}
                 	else if(cellColor == Color.BLUE)
                 	{
                 		categoryName = blueCategory;
+                		currentCell.setCategory(categoryName);
                 	}
                 	else if(cellColor == Color.GREEN)
                 	{
                 		categoryName = greenCategory;
+                		currentCell.setCategory(categoryName);
                 	}
                 	else if(cellColor == Color.YELLOW)
                 	{
                 		categoryName = yellowCategory;
+                		currentCell.setCategory(categoryName);
                 	}
                 	
                 	if(!categoryName.contentEquals("None"))
                 	{
-                		currentCell.cellCategoryId = db.getCategoryIdFromName(categoryName);
+                		currentCell.setCategoryId(db.getCategoryIdFromName(categoryName));
                     	//System.out.println("set cat id: " + currentCell.cellCategoryId);
                 	}
                 	
@@ -792,6 +948,7 @@ public class MainApp extends Application
         }
     	
     }
+    
     
     private Color getPlayerColorFromInt(int colorInt)
     {
@@ -815,6 +972,44 @@ public class MainApp extends Application
     	}
     	
     	return playerColor;
+    }
+    
+    private void sendInfoAlert(String alertMessage)
+	{
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setHeaderText("Information Alert");
+		alert.setContentText(alertMessage);
+		alert.show();
+	}
+    
+    private void disableButtonsEndgame()
+    {
+    	disableMoveButtons();
+    	rollButton.setDisable(true);
+    }
+    
+    private void addPlayerNameToScoreboardCell(Player player)
+    {
+    	if(player.getColor() == Color.RED)
+    	{
+    		Cell nameCell = board.getCells()[1][2];
+    		nameCell.formatScoreboardName(player.getName());
+    	}
+    	else if(player.getColor() == Color.BLUE)
+    	{
+    		Cell nameCell = board.getCells()[1][5];
+    		nameCell.formatScoreboardName(player.getName());
+    	}
+    	else if(player.getColor() == Color.GREEN)
+    	{
+    		Cell nameCell = board.getCells()[5][2];
+    		nameCell.formatScoreboardName(player.getName());
+    	}
+    	else if(player.getColor() == Color.YELLOW)
+    	{
+    		Cell nameCell = board.getCells()[5][6];
+    		nameCell.formatScoreboardName(player.getName());
+    	}
     }
 
 }

@@ -34,7 +34,7 @@ public class Player extends MainApp
         
         if(color == Color.RED)
         {
-        	this.col = 0;
+        	this.col = 4;
         	this.row = 0;
         	
         	colorStr = "Red";
@@ -44,8 +44,8 @@ public class Player extends MainApp
         } 
         else if(color == Color.YELLOW)
         {
-        	this.col = 8;
-        	this.row = 0;
+        	this.col = 0;
+        	this.row = 4;
         	
         	colorStr = "Yellow";
         	
@@ -55,7 +55,7 @@ public class Player extends MainApp
         }
         else if(color == Color.BLUE)
         {
-        	this.col = 8;
+        	this.col = 4;
         	this.row = 8;
         	
         	colorStr = "Blue";
@@ -65,8 +65,8 @@ public class Player extends MainApp
         }
         else if(color == Color.GREEN)
         {
-        	this.col = 0;
-        	this.row = 8;
+        	this.col = 8;
+        	this.row = 4;
         	
         	colorStr = "Green";
         	

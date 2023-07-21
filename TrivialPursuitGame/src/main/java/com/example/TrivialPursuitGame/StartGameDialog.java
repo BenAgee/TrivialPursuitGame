@@ -16,8 +16,6 @@ import javafx.scene.control.Dialog;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.Random;
 
 
 public class StartGameDialog extends Dialog{

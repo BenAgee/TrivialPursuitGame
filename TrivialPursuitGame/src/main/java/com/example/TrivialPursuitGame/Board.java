@@ -42,9 +42,10 @@ public class Board extends MainApp
             for (int row = 0; row < 9; row++)
             {
                 
-                // Valid board cells and scorboard cells;
+                // Valid board cells and scorboard cells and scoreboard name cells
                 if(validColumnsAndRows.contains(row) || validColumnsAndRows.contains(col) 
-                		|| (row == 2 && col == 2) || (row == 2 && col == 6) || (row == 6 && col == 2) || (row == 6 && col == 6))
+                		|| (row == 2 && col == 2) || (row == 2 && col == 6) || (row == 6 && col == 2) || (row == 6 && col == 6)
+                		|| (row == 1 && col == 2) || (row == 1 && col == 6) || (row == 5 && col == 2) || (row == 5 && col == 6))
                 {
                 	Cell cell = new Cell(row, col);
                 	cells[row][col] = cell;
@@ -62,23 +63,23 @@ public class Board extends MainApp
         System.out.println("checking player color to add: " + player.getColor());
         if(player.getColor() == Color.RED)
         {
-        	Cell startCell = cells[0][0];
+        	Cell startCell = cells[0][4];
             startCell.addPlayer(player);
         } 
         else if(player.getColor()  == Color.YELLOW)
         {
-        	Cell startCell = cells[0][8];
+        	Cell startCell = cells[4][0];
             startCell.addPlayer(player);
         	
         }
         else if(player.getColor()  == Color.BLUE)
         {
-        	Cell startCell = cells[8][8];
+        	Cell startCell = cells[8][4];
             startCell.addPlayer(player);
         }
         else if(player.getColor()  == Color.GREEN)
         {
-        	Cell startCell = cells[8][0];
+        	Cell startCell = cells[4][8];
             startCell.addPlayer(player);
         }
     }
