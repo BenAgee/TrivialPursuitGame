@@ -17,17 +17,37 @@ class DBConnection{
 		System.out.println("Connection Succesful!");
 	}
 	
-	// TODO Determine proper type to return question data
-	public void getAllQuestions() {
+	public ArrayList<String> getAllQuestions() {
+		ArrayList<String> questions = new ArrayList<>(1000);
 		try {
 			Statement stmt = con.createStatement();  
-			ResultSet rs = stmt.executeQuery("Select * from QUESTIONS");
+			ResultSet rs = stmt.executeQuery("Select question from QUESTIONS");
 			while(rs.next()) {
-				System.out.println(rs.getString(1)+" "+rs.getString(2));
+				System.out.println(rs.getString(1));
+				questions.add(rs.getString(1));
 			}
 		} catch (Exception e) { 
 			System.out.println(e);
 		}
+		
+		return questions;
+	}
+	
+	public ArrayList<String> getQuestionsFromCategory(int category_id) 
+	{
+		ArrayList<String> questions = new ArrayList<>(1000);
+		try {
+			Statement stmt = con.createStatement();  
+			ResultSet rs = stmt.executeQuery("Select question from QUESTIONS Where category_id = " + category_id + ";");
+			while(rs.next()) {
+				System.out.println(rs.getString(1));
+				questions.add(rs.getString(1));
+			}
+		} catch (Exception e) { 
+			System.out.println(e);
+		}
+		
+		return questions;
 	}
 	
 	public int addQuestion(String question, String answer, String category) {
@@ -70,6 +90,17 @@ class DBConnection{
 		}
 	}
 	
+	public void deleteAllCategories() {
+		try {
+			Statement stmt = con.createStatement();
+			int i = stmt.executeUpdate("DELETE FROM categories");
+			System.out.println("Cagtegories deleted!");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void addCategory(String category_name) {
 		PreparedStatement stmt;
 		try {
@@ -77,6 +108,60 @@ class DBConnection{
 					"INSERT INTO categories (name) VALUES (?)");
 			stmt.setString(1, category_name);
 			int result = stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteCategory(String category_name) {
+		PreparedStatement stmt;
+		
+		int catId = getCategoryIdFromName(category_name);
+		
+		try {
+			stmt = con.prepareStatement(
+					"delete from categories where category_id = " + catId + ";");
+			int result = stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteQuestion(String question) {
+		PreparedStatement stmt;
+		
+		try {
+			stmt = con.prepareStatement(
+					"delete from questions where question = \'" + question + "\';");
+			
+			System.out.println(stmt);
+			int result = stmt.executeUpdate();
+			
+			System.out.println("result: " + result);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteQuestionByCategory(String category, String question) {
+		PreparedStatement stmt;
+		
+		int catId = getCategoryIdFromName(category);
+		
+		try {
+			stmt = con.prepareStatement(
+					"delete from questions where question = \'" + question + "\' and category_id = "+ catId +";");
+			
+			System.out.println(stmt);
+			int result = stmt.executeUpdate();
+			
+			System.out.println("result: " + result);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -130,11 +215,59 @@ class DBConnection{
 		return QApair;
 	}
 	
+	public Boolean doesQuestionExist(String question)
+	{
+		Boolean questionExists = false;
+		
+		String qryStr = "Select question from questions Where question = \'" + question + "\'";
+		
+		System.out.println(qryStr);
+		
+		try {
+			Statement stmt = con.createStatement();  
+			ResultSet rs = stmt.executeQuery(qryStr);
+			
+			if(rs.next())
+			{
+				questionExists = true;
+			}
+			
+		} catch (Exception e) { 
+			System.out.println(e);
+		}
+		
+		return questionExists;
+	}
+	
+	public Boolean doesCategoryExist(String category)
+	{
+		Boolean categoryExists = false;
+		
+		String qryStr = "Select * from categories Where name = \'" + category + "\'";
+		
+		System.out.println(qryStr);
+		
+		try {
+			Statement stmt = con.createStatement();  
+			ResultSet rs = stmt.executeQuery(qryStr);
+			
+			if(rs.next())
+			{
+				categoryExists = true;
+			}
+			
+		} catch (Exception e) { 
+			System.out.println(e);
+		}
+		
+		return categoryExists;
+	}
+	
 	public int getCategoryIdFromName(String categoryName)
 	{
 		int catId = 0;
 		
-		String qryStr = "Select category_id from categories Where name=\'" + categoryName + "\';";
+		String qryStr = "Select * from categories Where name=\'" + categoryName + "\';";
 		
 		//System.out.println(qryStr);
 		

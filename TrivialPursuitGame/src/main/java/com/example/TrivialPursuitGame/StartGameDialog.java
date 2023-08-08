@@ -22,7 +22,7 @@ public class StartGameDialog extends Dialog{
 
 
 	Button startGameButton;
-	Button addQuestionButton;
+	Button manageQuestionSetButton;
 	Button addPlayerButton;
 	
 	DBConnection db;
@@ -113,16 +113,16 @@ public class StartGameDialog extends Dialog{
         startGameButton = new Button("Start Game");
         startGameButton.setDisable(true);
 
-		addQuestionButton = new Button("Add Questions");
+		manageQuestionSetButton = new Button("Manage Question Set");
 
 		HBox buttonBox = new HBox();
 		buttonBox.setPadding(new Insets(10));
-		buttonBox.getChildren().addAll(startGameButton, addQuestionButton);
+		buttonBox.getChildren().addAll(startGameButton, manageQuestionSetButton);
 
         // Set button actions
         addPlayerButton.setOnAction(e -> addPlayerButtonClicked());
         startGameButton.setOnAction(e -> startGameButtonClicked());
-		addQuestionButton.setOnAction(e -> addQuestionClicked());
+		manageQuestionSetButton.setOnAction(e -> addQuestionClicked());
 
         VBox mainBox = new VBox(10);
         mainBox.setPadding(new Insets(10));
@@ -136,7 +136,7 @@ public class StartGameDialog extends Dialog{
 
 	private void addQuestionClicked()
 	{
-		NewQuestions nq = new NewQuestions();
+		ManageQuestionSet nq = new ManageQuestionSet();
 		nq.showAndWait();
 		
 		updateCategories();
@@ -161,7 +161,7 @@ public class StartGameDialog extends Dialog{
 		}
 		else
 		{
-			System.out.println("failed input verification test");
+			sendErrorAlert("Must select a category for each color");
 		}
 		
 		
@@ -203,7 +203,7 @@ public class StartGameDialog extends Dialog{
 	private void sendErrorAlert(String alertMessage)
 	{
 		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setHeaderText("Information Alert");
+		alert.setHeaderText("Error Alert");
 		alert.setContentText(alertMessage);
 		alert.show();
 	}

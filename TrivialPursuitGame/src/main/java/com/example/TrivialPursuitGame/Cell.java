@@ -199,13 +199,14 @@ public class Cell extends MainApp
     	
     	setCellStyle();
     	
-    	final String styleStr = ""
-        		+ "-fx-border-color: black;\n"
-        		+ "-fx-border-width: 5;\n";
+//    	final String styleStr = ""
+//        		+ "-fx-border-color: black;\n"
+//        		+ "-fx-border-width: 5;\n";
     	
         for (Player player : cellPlayers) {
             Circle playerToken = new Circle(10, player.getColor());
-            playerToken.setStyle(styleStr);
+            playerToken.setStroke(Color.BLACK);
+            playerToken.setStrokeWidth(3);
             cellPane.getChildren().add(playerToken);
             
             if(player.getColor() == Color.RED)
