@@ -2,13 +2,12 @@
 <h1> Test Name </h1>
 <h2>Goal(s):</h2>  List of goals this individual test accomplishes
 
-<h2>Functionality(s):</h2> List of Software Functionality under test 
+<h2>Requirement(s): List the requirements this plan addresses 
 
-<h2>Requirement(s):</h2> List of Requirements under test (Optional)
 
 ================================================================================
 
-<h3>A. Procedure: </h3> Procedure description. There shall be at least one procedure. Each procedure shall contain at least one verification step (unordered list with letters)
+<h3>1. Procedure: </h3> Procedure description. There shall be at least one procedure. Each procedure shall contain at least one verification step (unordered list with letters)
 
 <h3>Location:</h3> i.e. reference to setup steps or physical location. A location can contain any number of “Instructions” or “Verifications” steps. Examples below (multilayered list with 4 spaces per level)
 
