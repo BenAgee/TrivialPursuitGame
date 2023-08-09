@@ -147,21 +147,42 @@ public class StartGameDialog extends Dialog{
 	{
 		// add error handling to ensure categories are selected and at least 1 player has been added.
 		
-		if(!playerNameList.isEmpty() && !redInput.getValue().isBlank() && !blueInput.getValue().isBlank() && !greenInput.getValue().isBlank() && !yellowInput.getValue().isBlank())
+		if(playerNameList != null)
 		{
-			redCategoryName = redInput.getValue();
-			blueCategoryName = blueInput.getValue();
-			greenCategoryName = greenInput.getValue();
-			yellowCategoryName = yellowInput.getValue();
-			
-			validGameParameters = true;
-			
-			Stage stage = (Stage) startGameButton.getScene().getWindow();
-			stage.close();
+			if(!playerNameList.isEmpty() && redInput.getValue() !=null && blueInput.getValue() != null && greenInput.getValue() != null && yellowInput.getValue() != null)
+			{
+				
+				redCategoryName = redInput.getValue();
+				blueCategoryName = blueInput.getValue();
+				greenCategoryName = greenInput.getValue();
+				yellowCategoryName = yellowInput.getValue();
+				
+				Boolean hasRedQs = db.doesCategoryHaveQuestions(redCategoryName);
+				Boolean hasBlueQs = db.doesCategoryHaveQuestions(blueCategoryName);
+				Boolean hasGreenQs = db.doesCategoryHaveQuestions(greenCategoryName);
+				Boolean hasYellowQs = db.doesCategoryHaveQuestions(yellowCategoryName);
+				
+				if(hasRedQs && hasBlueQs && hasGreenQs && hasYellowQs)
+				{
+					validGameParameters = true;
+					
+					Stage stage = (Stage) startGameButton.getScene().getWindow();
+					stage.close();
+				}
+				else
+				{
+					sendErrorAlert("Some categories chosen have no questions, change category selection or add questions ");
+				}
+				
+			}
+			else
+			{
+				sendErrorAlert("Must select a category for each color");
+			}
 		}
 		else
 		{
-			sendErrorAlert("Must select a category for each color");
+			
 		}
 		
 		
@@ -172,20 +193,26 @@ public class StartGameDialog extends Dialog{
 	{
 		String playerName = playerInput.getText();
 		
-		
-		if(!playerName.isBlank() && !playerNameList.contains(playerName))
+		if(playerNameList.size() < 4)
 		{
-			playerNameList.add(playerName);
-			
-			sendInfoAlert("Player Added: " + playerName);	
-			
-			playerInput.setText("");
-			
-			startGameButton.setDisable(false);
+			if(!playerName.isBlank() && !playerNameList.contains(playerName))
+			{
+				playerNameList.add(playerName);
+				
+				sendInfoAlert("Player Added: " + playerName);	
+				
+				playerInput.setText("");
+				
+				startGameButton.setDisable(false);
+			}
+			else
+			{
+				sendErrorAlert("You must enter an unused and non-blank player name.");
+			}
 		}
 		else
 		{
-			sendErrorAlert("You must enter an unused and non-blank player name.");
+			sendErrorAlert("4 players already added, cannot add more than 4.");
 		}
 		
 		
@@ -221,6 +248,7 @@ public class StartGameDialog extends Dialog{
         greenInput.setItems(availableCategoriesList);
         yellowInput.setItems(availableCategoriesList);
 	}
+	
 	
 
 }

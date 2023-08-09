@@ -175,8 +175,8 @@ public class ManageQuestionSet extends Dialog{
     		db.addQuestion(q, a, cat);
             question.setText("");
             answer.setText("");
-            available_categories_box.setValue(null);
-            delete_question_by_category_box.setValue(null);
+            
+            updateQuestionsByCategory();
             
             //sendInfoAlert("Question Added");
     		
@@ -193,6 +193,7 @@ public class ManageQuestionSet extends Dialog{
     	if(validInput(cat))
     	{
     		db.deleteCategory(cat);
+    		
     	}
     	else
     	{
@@ -260,17 +261,24 @@ public class ManageQuestionSet extends Dialog{
     	String cat = delete_question_by_category_box.getValue();
     	System.out.println("selected cat value: " + cat);
     	
-		int catId = db.getCategoryIdFromName(cat);
-    	ArrayList<String> availableQuestions = db.getQuestionsFromCategory(catId);
-    	for (String question : availableQuestions) {
-    		System.out.println(question);
+    	if(cat != null)
+    	{
+    		if(!cat.isBlank() && !cat.isEmpty())
+    		{
+    			int catId = db.getCategoryIdFromName(cat);
+    	    	ArrayList<String> availableQuestions = db.getQuestionsFromCategory(catId);
+    	    	for (String question : availableQuestions) {
+    	    		System.out.println(question);
+    	    	}
+    	 
+    	        ObservableList<String> availableQuestionsList = FXCollections.observableArrayList(
+    	        		availableQuestions
+    	            );
+    	        
+    	        delete_question_box.setItems(availableQuestionsList);
+    		}
     	}
- 
-        ObservableList<String> availableQuestionsList = FXCollections.observableArrayList(
-        		availableQuestions
-            );
-        
-        delete_question_box.setItems(availableQuestionsList);
+		
     	
     }
     

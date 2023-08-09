@@ -129,6 +129,8 @@ class DBConnection{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		deleteAllQuestionsFromCategory(catId);
 	}
 	
 	public void deleteQuestion(String question) {
@@ -157,6 +159,25 @@ class DBConnection{
 		try {
 			stmt = con.prepareStatement(
 					"delete from questions where question = \'" + question + "\' and category_id = "+ catId +";");
+			
+			System.out.println(stmt);
+			int result = stmt.executeUpdate();
+			
+			System.out.println("result: " + result);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void deleteAllQuestionsFromCategory(int catId)
+	{
+		PreparedStatement stmt;
+		
+		try {
+			stmt = con.prepareStatement(
+					"delete from questions where category_id = "+ catId +";");
 			
 			System.out.println(stmt);
 			int result = stmt.executeUpdate();
@@ -261,6 +282,32 @@ class DBConnection{
 		}
 		
 		return categoryExists;
+	}
+	
+	public Boolean doesCategoryHaveQuestions(String category)
+	{
+		Boolean hasQuestions = false;
+		
+		int catId = getCategoryIdFromName(category);
+		
+		String qryStr = "Select * from questions Where category_id = \'" + catId + "\'";
+		
+		System.out.println(qryStr);
+		
+		try {
+			Statement stmt = con.createStatement();  
+			ResultSet rs = stmt.executeQuery(qryStr);
+			
+			if(rs.next())
+			{
+				hasQuestions = true;
+			}
+			
+		} catch (Exception e) { 
+			System.out.println(e);
+		}
+		
+		return hasQuestions;
 	}
 	
 	public int getCategoryIdFromName(String categoryName)

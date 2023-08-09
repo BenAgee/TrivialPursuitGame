@@ -27,7 +27,7 @@ public class QuestionDialog extends Dialog{
 	{
 		super(); // invokes constructor of the Dialog class
 		int category_id = catId;
-		answerResultLabel = new Label("initial answer");
+		answerResultLabel = new Label("");
 		
 		db = new DBConnection();
 		

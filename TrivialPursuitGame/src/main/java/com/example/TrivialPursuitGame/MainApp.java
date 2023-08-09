@@ -204,9 +204,9 @@ public class MainApp extends Application
     private void rollButtonClicked()
     {
         Random rand = new Random();
-        rollNumber = rand.nextInt(6) + 1;
+        //rollNumber = rand.nextInt(6) + 1;
         
-        //rollNumber = 4; // used for troubleshooting
+        rollNumber = 4; // used for troubleshooting
         
         setValidMovementDirections();
 
