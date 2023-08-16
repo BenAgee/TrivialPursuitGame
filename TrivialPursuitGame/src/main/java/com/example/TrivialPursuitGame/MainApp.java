@@ -199,7 +199,7 @@ public class MainApp extends Application
         rollNumberLabel.setStyle("-fx-font-weight: bold;");
         rollNumberLabel.setPrefWidth(20);
 
-        footerBox.getChildren().addAll(rollButton, rollNumberLabel, moveUpButton, moveDownButton, moveLeftButton, moveRightButton);
+        footerBox.getChildren().addAll(rollButton, rollNumberLabel, moveUpButton, moveDownButton, moveLeftButton, moveRightButton, helpButton);
 
         return footerBox;
     }
