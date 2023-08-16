@@ -48,6 +48,7 @@ public class MainApp extends Application
     private Button moveDownButton;
     private Button moveLeftButton;
     private Button moveRightButton;
+    private Button helpButton;
     
     private Stage primaryStage;
     
@@ -181,6 +182,7 @@ public class MainApp extends Application
         moveDownButton = new Button("Move Down");
         moveLeftButton = new Button("Move Left");
         moveRightButton = new Button("Move Right");
+        helpButton = new Button("Help");
         
         disableMoveButtons();
         
@@ -188,6 +190,7 @@ public class MainApp extends Application
         moveDownButton.setOnAction(e -> moveDown());
         moveRightButton.setOnAction(e -> moveRight());
         moveLeftButton.setOnAction(e -> moveLeft());
+        helpButton.setOnAction(e -> launchHelpWindow());
         
         rollNumberLabel = new Label();
         rollNumberLabel.setStyle("-fx-background-color: white;");
@@ -925,4 +928,11 @@ public class MainApp extends Application
 			resetBoard();
 		}
     }
+    
+    private void launchHelpWindow()
+	{
+		HelpMenu hm = new HelpMenu();
+		hm.showAndWait();
+	}
+	
 }

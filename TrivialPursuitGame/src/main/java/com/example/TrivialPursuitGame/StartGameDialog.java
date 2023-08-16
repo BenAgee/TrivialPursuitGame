@@ -24,6 +24,7 @@ public class StartGameDialog extends Dialog{
 	Button startGameButton;
 	Button manageQuestionSetButton;
 	Button addPlayerButton;
+	Button helpButton;
 	
 	DBConnection db;
 	
@@ -100,7 +101,7 @@ public class StartGameDialog extends Dialog{
         yellowBox.setPadding(new Insets(10));
         yellowBox.getChildren().addAll(yellowCategoryLabel, yellowInput);
         
-        
+        helpButton = new Button("Help");
         
         // Create the buttons
         addPlayerButton = new Button("Add Player");
@@ -117,12 +118,13 @@ public class StartGameDialog extends Dialog{
 
 		HBox buttonBox = new HBox();
 		buttonBox.setPadding(new Insets(10));
-		buttonBox.getChildren().addAll(startGameButton, manageQuestionSetButton);
+		buttonBox.getChildren().addAll(startGameButton, manageQuestionSetButton, helpButton);
 
         // Set button actions
         addPlayerButton.setOnAction(e -> addPlayerButtonClicked());
         startGameButton.setOnAction(e -> startGameButtonClicked());
 		manageQuestionSetButton.setOnAction(e -> addQuestionClicked());
+		helpButton.setOnAction(e -> launchHelpWindow());
 
         VBox mainBox = new VBox(10);
         mainBox.setPadding(new Insets(10));
@@ -249,6 +251,11 @@ public class StartGameDialog extends Dialog{
         yellowInput.setItems(availableCategoriesList);
 	}
 	
+	private void launchHelpWindow()
+	{
+		HelpMenu hm = new HelpMenu();
+		hm.showAndWait();
+	}
 	
 
 }

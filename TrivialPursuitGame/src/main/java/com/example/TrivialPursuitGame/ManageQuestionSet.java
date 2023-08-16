@@ -26,6 +26,7 @@ public class ManageQuestionSet extends Dialog{
     Button delete_category_button;
     Button delete_all_questions_button;
     Button delete_all_categories_button;
+    private Button helpButton;
     
     ComboBox<String> available_categories_box;
     ComboBox<String> delete_category_box;
@@ -62,6 +63,9 @@ public class ManageQuestionSet extends Dialog{
         delete_all_categories_button = new Button("Delete All Categories");
         delete_all_questions_button = new Button("Delete All Questions");
         return_to_menu = new Button("Return To Menu");
+        helpButton = new Button("Help");
+        
+        helpButton.setOnAction(e -> launchHelpWindow());
         
         available_categories_box = new ComboBox<String>();
         delete_category_box = new ComboBox<String>();
@@ -103,9 +107,13 @@ public class ManageQuestionSet extends Dialog{
         deleteQuestionByCategoryBox.setPadding(new Insets(10));
         deleteQuestionByCategoryBox.getChildren().addAll(delete_all_questions_button, delete_question_by_category_box, delete_question_box, delete_question_button);
         
+        HBox windowManagementBox = new HBox();
+        windowManagementBox.setPadding(new Insets(10));
+        windowManagementBox.getChildren().addAll(return_to_menu, helpButton);
+        
         VBox mainBox = new VBox(10);
         mainBox.setPadding(new Insets(10));
-        mainBox.getChildren().addAll(prompt_category, addCategoryBox, prompt_question, addQuestionBox, prompt_delete_category, deleteCategoryBox, prompt_delete_question, deleteQuestionByCategoryBox, return_to_menu);
+        mainBox.getChildren().addAll(prompt_category, addCategoryBox, prompt_question, addQuestionBox, prompt_delete_category, deleteCategoryBox, prompt_delete_question, deleteQuestionByCategoryBox, windowManagementBox);
         
         updateCategoriesBox();
         
@@ -312,6 +320,13 @@ public class ManageQuestionSet extends Dialog{
 		alert.setContentText(alertMessage);
 		alert.show();
 	}
+    
+    private void launchHelpWindow()
+	{
+		HelpMenu hm = new HelpMenu();
+		hm.showAndWait();
+	}
+	
     
 //    private void updateQuestionsBox()
 //    {
