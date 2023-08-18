@@ -20,8 +20,6 @@ import java.util.Random;
 
 public class MainApp extends Application
 {
-
-    //private LinkedList<String> categoryList = new LinkedList<>();
     
     private String redCategory;
     private String blueCategory;
@@ -39,10 +37,11 @@ public class MainApp extends Application
     private Label currentPlayerLabel;
     private Label categoryLabel;
     private Label currentCategoryLabel;
-    //private Label questionLabel;
     private Label rollNumberLabel;
     private Button rollButton;
-    private int rollNumber;   
+    private int rollNumber;
+    
+    private Label categoriesLegendLabel;
     
     private Button moveUpButton;
     private Button moveDownButton;
@@ -126,6 +125,10 @@ public class MainApp extends Application
 	        addPlayer("player1", Color.RED);
         }
         
+        String categoriesStr = "Red: " + redCategory + ", Blue: " +  blueCategory + ", Green: " + greenCategory + ", Yellow: " + yellowCategory;
+
+        categoriesLegendLabel.setText(categoriesStr);
+        
         // set categories based on input from game start dialog that still needs to be made
         setCategories();
 
@@ -162,16 +165,15 @@ public class MainApp extends Application
         categoryLabel.setStyle("-fx-font-size: 18px;");
         currentCategoryLabel = new Label();
         currentCategoryLabel.setStyle("-fx-font-size: 18px;");
-        //questionLabel.setStyle("-fx-font-size: 14px;");
-        //questionLabel.setMaxWidth(200);
+
 
         headerBox.getChildren().addAll(currentPlayerLabel, categoryLabel, currentCategoryLabel);
         return headerBox;
     }
 
-    private HBox createFooter()
+    private VBox createFooter()
     {
-        HBox footerBox = new HBox();
+        VBox footerBox = new VBox();
         footerBox.setAlignment(Pos.CENTER);
         footerBox.setSpacing(20);
 
@@ -198,9 +200,24 @@ public class MainApp extends Application
         rollNumberLabel.setStyle("-fx-border-color: black;");
         rollNumberLabel.setStyle("-fx-font-weight: bold;");
         rollNumberLabel.setPrefWidth(20);
+        
+        categoriesLegendLabel = new Label("");
+        
+        HBox controlBox = new HBox();
+        controlBox.setAlignment(Pos.CENTER);
+        controlBox.setSpacing(10);
+        
+        HBox categoriesBox = new HBox();
+        categoriesBox.setAlignment(Pos.CENTER);
+        categoriesBox.setSpacing(10);
+ 
+        
+        controlBox.getChildren().addAll(rollButton, rollNumberLabel, moveUpButton, moveDownButton, moveLeftButton, moveRightButton, helpButton);
 
-        footerBox.getChildren().addAll(rollButton, rollNumberLabel, moveUpButton, moveDownButton, moveLeftButton, moveRightButton, helpButton);
-
+        categoriesBox.getChildren().addAll(categoriesLegendLabel);
+        
+        footerBox.getChildren().addAll(controlBox, categoriesBox);
+        
         return footerBox;
     }
 
