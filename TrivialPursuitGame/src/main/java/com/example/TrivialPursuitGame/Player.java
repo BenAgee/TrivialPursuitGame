@@ -18,7 +18,8 @@ public class Player extends MainApp
     
     public String colorStr;
 
-    public Player(String name, Color color)
+    @SuppressWarnings("exports")
+	public Player(String name, Color color)
     {
         this.name = name;
         this.color = color;
@@ -76,7 +77,8 @@ public class Player extends MainApp
         
     }
     
-    public void collectHqToken(Color hqColor)
+    @SuppressWarnings({ "exports", "static-access" })
+	public void collectHqToken(Color hqColor)
     {
     	if(hqColor == Color.RED)
     	{
@@ -109,7 +111,8 @@ public class Player extends MainApp
         return name;
     }
 
-    public Color getColor()
+    @SuppressWarnings("exports")
+	public Color getColor()
     {
         return color;
     }

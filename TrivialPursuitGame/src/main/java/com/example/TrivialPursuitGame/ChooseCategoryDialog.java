@@ -3,6 +3,7 @@ package com.example.TrivialPursuitGame;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -11,9 +12,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import javafx.scene.control.ComboBox;
 
-import javafx.scene.control.Dialog;
-
-public class ChooseCategoryDialog extends Dialog{
+public class ChooseCategoryDialog{
 	
 	String questionCategory;
 	
@@ -29,8 +28,6 @@ public class ChooseCategoryDialog extends Dialog{
 
 		
 		db = new DBConnection();
-		
-		this.setTitle("Choose Category Dialog");
         
         buildUI();
          
@@ -38,6 +35,12 @@ public class ChooseCategoryDialog extends Dialog{
 	
 	private void buildUI()
 	{
+		Stage chooseCategoryStage = new Stage();
+		chooseCategoryStage.setTitle("Choose Category");
+
+        // Create content for the second window
+        StackPane chooseCategoryLayout = new StackPane();
+		
 		// Create the question label
         Label categoryLabel = new Label("Select Category");
         
@@ -59,9 +62,15 @@ public class ChooseCategoryDialog extends Dialog{
         mainBox.setPadding(new Insets(10));
         mainBox.getChildren().addAll(categoryLabel, chooseCategoryBox, selectCategoryButton);
         
-        getDialogPane().getScene().getWindow().setOnCloseRequest(event -> this.close());
+        chooseCategoryLayout.getChildren().addAll(mainBox);
+        
+        chooseCategoryStage.setScene(new Scene(chooseCategoryLayout, 200, 200));
+        
+        chooseCategoryStage.showAndWait();
+        
+        //getDialogPane().getScene().getWindow().setOnCloseRequest(event -> this.close());
 
-        getDialogPane().setContent(mainBox);
+        //getDialogPane().setContent(mainBox);
         
 	}
 	

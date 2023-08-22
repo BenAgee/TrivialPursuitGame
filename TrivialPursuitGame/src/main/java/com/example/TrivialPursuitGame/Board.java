@@ -2,7 +2,6 @@ package com.example.TrivialPursuitGame;
 
 import java.util.LinkedList;
 
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -20,12 +19,6 @@ public class Board extends MainApp
         //boardPane.setHgap(10);
         //boardPane.setVgap(10);
         //boardPane.setPadding(new Insets(10));
-        
-        final String boardStyleStr = "-fx-background-color: white;\n"
-        		+ "-fx-border-color: black;\n"
-        		+ "-fx-border-width: 5;\n";
-        
-        //boardPane.setStyle(boardStyleStr);
 
         
         
@@ -84,7 +77,8 @@ public class Board extends MainApp
         }
     }
 
-    public GridPane getBoardPane()
+    @SuppressWarnings("exports")
+	public GridPane getBoardPane()
     {
         return boardPane;
     }

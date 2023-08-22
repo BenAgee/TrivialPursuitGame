@@ -1,7 +1,6 @@
 package com.example.TrivialPursuitGame;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 //import javafx.scene.layout.Pane;
@@ -10,7 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 
 public class Cell extends MainApp
@@ -230,7 +228,7 @@ public class Cell extends MainApp
         
     }
 
-    public void updatePlayerHqTokens(Player player, Color hqTokenColor)
+    public void updatePlayerHqTokens(Player player, @SuppressWarnings("exports") Color hqTokenColor)
     {
     	System.out.println("updatePlayerHqTokens called, cellColor: " + cellColor + " cellCategoryIndx: " + cellCategoryId);
         //cellPane.getChildren().clear();
@@ -296,7 +294,8 @@ public class Cell extends MainApp
     	row = newRow;
     }
 
-    public StackPane getPane()
+    @SuppressWarnings("exports")
+	public StackPane getPane()
     {
         return cellPane;
     }
@@ -331,7 +330,8 @@ public class Cell extends MainApp
 
     }
     
-    public Color getCellColor()
+    @SuppressWarnings("exports")
+	public Color getCellColor()
     {
     	return cellColor;
     }

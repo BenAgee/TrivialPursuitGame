@@ -12,12 +12,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.stage.Modality;
 import javafx.scene.control.ComboBox;
 
-import javafx.scene.control.Dialog;
+//import javafx.scene.control.Dialog;
 
-public class ManageQuestionSet extends Dialog{
+public class ManageQuestionSet{
     Button add_question_button;
     Button add_category_button;
     Button return_to_menu;
@@ -45,12 +44,19 @@ public class ManageQuestionSet extends Dialog{
         //nothing really to setup here
         
         System.out.println("db connected:" + db.toString());
-        this.setTitle("Trivial Compute Question Page");
+        //this.setTitle("Trivial Compute Question Page");
         buildUI();
         
     }
 
     private void buildUI() {
+    	
+    	Stage mqsStage = new Stage();
+        mqsStage.setTitle("Manage Question Set");
+
+        // Create content for the second window
+        StackPane mqsLayout = new StackPane();
+    	
         Label prompt_category = new Label("Add a Category:");
         Label prompt_question = new Label("Add a Question:");
         Label prompt_delete_category = new Label("Delete Categories:");
@@ -117,9 +123,14 @@ public class ManageQuestionSet extends Dialog{
         
         updateCategoriesBox();
         
-        getDialogPane().getScene().getWindow().setOnCloseRequest(event -> this.close());
+        mqsLayout.getChildren().addAll(mainBox);
         
-        getDialogPane().setContent(mainBox);
+        mqsStage.setScene(new Scene(mqsLayout, 600, 450));
+        mqsStage.showAndWait();
+        
+        //getDialogPane().getScene().getWindow().setOnCloseRequest(event -> this.close());
+        
+        //getDialogPane().setContent(mainBox);
     }
 
     private void addCategory() {
@@ -224,8 +235,17 @@ public class ManageQuestionSet extends Dialog{
     	// TODO add error handling to make sure a question and category is selected
     	String cat = delete_question_by_category_box.getValue();
     	String q = delete_question_box.getValue();
-    	db.deleteQuestionByCategory(cat, q);
-    	updateQuestionsByCategory();
+    	
+    	if(cat != null && q != null)
+    	{
+    		db.deleteQuestionByCategory(cat, q);
+        	updateQuestionsByCategory();
+    	}
+    	else
+    	{
+    		sendErrorAlert("You must select a category and a question to delete");
+    	}
+    	
     }
     
     private void deleteAllCategories()
@@ -313,18 +333,18 @@ public class ManageQuestionSet extends Dialog{
 		alert.show();
 	}
     
-    private void sendInfoAlert(String alertMessage)
-	{
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setHeaderText("Information Alert");
-		alert.setContentText(alertMessage);
-		alert.show();
-	}
+//    private void sendInfoAlert(String alertMessage)
+//	{
+//		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//		alert.setHeaderText("Information Alert");
+//		alert.setContentText(alertMessage);
+//		alert.show();
+//	}
     
     private void launchHelpWindow()
 	{
-		HelpMenu hm = new HelpMenu();
-		hm.showAndWait();
+		//HelpMenu hm = new HelpMenu();
+		new HelpMenu();
 	}
 	
     
