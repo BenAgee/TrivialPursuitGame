@@ -90,7 +90,7 @@ public class Player extends MainApp
     	{
     		hasGreenHqToken = true;
     	}
-    	else if(hqColor == color.YELLOW)
+    	else if(hqColor == Color.YELLOW)
     	{
     		hasYellowHqToken = true;
     	}
@@ -139,11 +139,11 @@ public class Player extends MainApp
     }
     public void setHasGreenHqToken(Boolean setVal)
     {
-    	hasRedHqToken  = setVal;
+    	hasGreenHqToken  = setVal;
     }
     public void setHasYellowHqToken(Boolean setVal)
     {
-    	hasRedHqToken  = setVal;
+    	hasYellowHqToken  = setVal;
     }
     
     public Boolean getHasRedHqToken()
@@ -152,15 +152,15 @@ public class Player extends MainApp
     }
     public Boolean getHasBlueHqToken()
     {
-    	return hasRedHqToken;
+    	return hasBlueHqToken;
     }
     public Boolean getHasGreenHqToken()
     {
-    	return hasRedHqToken;
+    	return hasGreenHqToken;
     }
     public Boolean getHasYellowHqToken()
     {
-    	return hasRedHqToken;
+    	return hasYellowHqToken;
     }
 
     public Boolean getHasAllHqTokens()
