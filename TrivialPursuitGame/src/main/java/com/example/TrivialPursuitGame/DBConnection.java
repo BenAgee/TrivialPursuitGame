@@ -69,7 +69,7 @@ class DBConnection{
 			stmt.setString(1,question);
 			stmt.setString(2, answer);
 			stmt.setInt(3, category_id);
-			int i = stmt.executeUpdate();
+			stmt.executeUpdate();
 			System.out.println("Question added!");
 			return 1;
 		} catch (SQLException e) {
@@ -82,7 +82,7 @@ class DBConnection{
 	public void deleteAllQuestions() {
 		try {
 			Statement stmt = con.createStatement();
-			int i = stmt.executeUpdate("DELETE FROM questions");
+			stmt.executeUpdate("DELETE FROM questions");
 			System.out.println("Questions deleted!");
 			
 		} catch (SQLException e) {
@@ -93,7 +93,7 @@ class DBConnection{
 	public void deleteAllCategories() {
 		try {
 			Statement stmt = con.createStatement();
-			int i = stmt.executeUpdate("DELETE FROM categories");
+			stmt.executeUpdate("DELETE FROM categories");
 			System.out.println("Cagtegories deleted!");
 			
 		} catch (SQLException e) {
@@ -107,7 +107,7 @@ class DBConnection{
 			stmt = con.prepareStatement(
 					"INSERT INTO categories (name) VALUES (?)");
 			stmt.setString(1, category_name);
-			int result = stmt.executeUpdate();
+			stmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -123,7 +123,7 @@ class DBConnection{
 		try {
 			stmt = con.prepareStatement(
 					"delete from categories where category_id = " + catId + ";");
-			int result = stmt.executeUpdate();
+			stmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

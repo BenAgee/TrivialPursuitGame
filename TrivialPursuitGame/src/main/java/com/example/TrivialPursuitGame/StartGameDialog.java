@@ -3,6 +3,7 @@ package com.example.TrivialPursuitGame;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,14 +12,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-
-import javafx.scene.control.Dialog;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 
-public class StartGameDialog extends Dialog{
+public class StartGameDialog{
 
 
 	Button startGameButton;
@@ -52,7 +50,9 @@ public class StartGameDialog extends Dialog{
 		
 		db = new DBConnection();
 		
-		this.setTitle("Trivial Compute Start Page");
+		//this.setTitle("Trivial Compute Start Page");
+		
+		
 		buildUI();
 		
         
@@ -60,6 +60,14 @@ public class StartGameDialog extends Dialog{
 	
 	private void buildUI()
 	{
+		
+		Stage sgd = new Stage();
+		sgd.setTitle("Welcome To Trivia Compute!");
+
+        // Create content for the second window
+        StackPane sgdLayout = new StackPane();
+        
+        
 		// Create the question label
         Label headerLabel = new Label("Select game categories and add players");
         
@@ -130,16 +138,23 @@ public class StartGameDialog extends Dialog{
         mainBox.setPadding(new Insets(10));
         mainBox.getChildren().addAll(headerLabel, redBox, blueBox, greenBox, yellowBox, addPlayerBox, buttonBox);
         
-        getDialogPane().getScene().getWindow().setOnCloseRequest(event -> this.close());
         
-        getDialogPane().setContent(mainBox);
+        sgdLayout.getChildren().addAll(mainBox);
+        
+        sgd.setScene(new Scene(sgdLayout, 300, 400));
+        sgd.showAndWait();
+        
+        //getDialogPane().getScene().getWindow().setOnCloseRequest(event -> this.close());
+        
+        //getDialogPane().setContent(mainBox);
         
 	}
 
 	private void addQuestionClicked()
 	{
-		ManageQuestionSet nq = new ManageQuestionSet();
-		nq.showAndWait();
+		//ManageQuestionSet nq = new ManageQuestionSet();
+		new ManageQuestionSet();
+		//nq.showAndWait();
 		
 		updateCategories();
 		
@@ -253,8 +268,9 @@ public class StartGameDialog extends Dialog{
 	
 	private void launchHelpWindow()
 	{
-		HelpMenu hm = new HelpMenu();
-		hm.showAndWait();
+		//HelpMenu hm = new HelpMenu();
+		
+		new HelpMenu();
 	}
 	
 

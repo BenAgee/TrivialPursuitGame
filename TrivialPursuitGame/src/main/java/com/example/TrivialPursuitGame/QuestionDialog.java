@@ -1,15 +1,14 @@
 package com.example.TrivialPursuitGame;
 
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.util.Map;
 
-import javafx.scene.control.Dialog;
-
-public class QuestionDialog extends Dialog{
+public class QuestionDialog{
 	
 	String questionCategory;
 	Boolean answerCorrect = false;
@@ -31,8 +30,6 @@ public class QuestionDialog extends Dialog{
 		
 		db = new DBConnection();
 		
-		this.setTitle("Question Dialog");
-		
 		Map<String, String> QApair = db.getQuestion(category_id);
         
     	// get question from db in table corresponding to category
@@ -48,6 +45,13 @@ public class QuestionDialog extends Dialog{
 	
 	private void buildUI()
 	{
+		
+		Stage questionStage = new Stage();
+		questionStage.setTitle("Question");
+
+        // Create content for the second window
+        StackPane questionLayout = new StackPane();
+        
 		// Create the question label
         Label questionLabel = new Label(questionStr);
         
@@ -78,9 +82,15 @@ public class QuestionDialog extends Dialog{
         mainBox.setPadding(new Insets(10));
         mainBox.getChildren().addAll(questionLabel, answerBox, buttonBox);
         
-        getDialogPane().getScene().getWindow().setOnCloseRequest(event -> this.close());
+        questionLayout.getChildren().addAll(mainBox);
+        
+        questionStage.setScene(new Scene(questionLayout, 400, 200));
+        
+        questionStage.showAndWait();
+        
+        //getDialogPane().getScene().getWindow().setOnCloseRequest(event -> this.close());
 
-        getDialogPane().setContent(mainBox);
+        //getDialogPane().setContent(mainBox);
         
 	}
 	

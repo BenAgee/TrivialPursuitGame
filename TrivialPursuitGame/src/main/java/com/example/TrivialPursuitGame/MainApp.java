@@ -60,7 +60,8 @@ public class MainApp extends Application
         
     }
 
-    @Override
+    @SuppressWarnings("exports")
+	@Override
     public void start(Stage primaryStageInput)
     {
     	primaryStage = primaryStageInput;
@@ -86,7 +87,7 @@ public class MainApp extends Application
         if(useSGD)
         {
 	        StartGameDialog sgd = new StartGameDialog();
-	        sgd.showAndWait();
+	        //sgd.showAndWait();
 	        
 	        System.out.println("added players: " + sgd.playerNameList);
 	        System.out.println("chosen category for red: " + sgd.redCategoryName);
@@ -224,9 +225,9 @@ public class MainApp extends Application
     private void rollButtonClicked()
     {
         Random rand = new Random();
-        //rollNumber = rand.nextInt(6) + 1;
+        rollNumber = rand.nextInt(6) + 1;
         
-        rollNumber = 4; // used for troubleshooting
+        //rollNumber = 4; // used for troubleshooting
         
         setValidMovementDirections();
 
@@ -905,11 +906,8 @@ public class MainApp extends Application
     {
     	ChooseCategoryDialog ccd = new ChooseCategoryDialog();
 		
-		ccd.showAndWait();
-		
 		// launch question dialog
 		QuestionDialog questionDialog = new QuestionDialog(ccd.chosenCategoryId);
-		questionDialog.showAndWait();
 		
 		if(questionDialog.answerCorrect)
 		{
@@ -928,7 +926,6 @@ public class MainApp extends Application
     {
     	// launch question dialog
 		QuestionDialog questionDialog = new QuestionDialog(currentCell.getCellCategoryId());
-		questionDialog.showAndWait();
 		
 		answerCorrect = questionDialog.answerCorrect;
 		if(!answerCorrect)
@@ -948,8 +945,10 @@ public class MainApp extends Application
     
     private void launchHelpWindow()
 	{
-		HelpMenu hm = new HelpMenu();
-		hm.showAndWait();
+		//HelpMenu hm = new HelpMenu();
+		//hm.showAndWait();
+		
+		new HelpMenu();
 	}
 	
 }

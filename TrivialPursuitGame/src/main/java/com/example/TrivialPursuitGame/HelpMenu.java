@@ -1,29 +1,20 @@
 package com.example.TrivialPursuitGame;
 
-import java.util.Map;
-
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
 
-import javafx.scene.control.Dialog;
 
-public class HelpMenu extends Dialog{
+public class HelpMenu{
 	
 	Button exitHelpButton;
 	
 	public HelpMenu()
 	{
 		super(); // invokes constructor of the Dialog class
-
-		
-		this.setTitle("Help Menu");
 		
         buildUI();
          
@@ -32,13 +23,19 @@ public class HelpMenu extends Dialog{
 	private void buildUI()
 	{
         
+		Stage helpStage = new Stage();
+		helpStage.setTitle("Help Menu");
+
+        // Create content for the second window
+        StackPane helpLayout = new StackPane();
+		
         // Create a TextArea to hold the help text
         TextArea textArea = new TextArea();
         textArea.setEditable(false);
         textArea.setWrapText(true);
         String helpTextString = "Trivia Compute Help Menu\n\n"
         		+ "Building a Question Set:\n\n"
-        		+ "The first time you play the game, you will have to create your questions set "
+        		+ "The first time you play the game, you will have to create your questions set. "
         		+ "Start the game and click on the \"Manage Question Set\" button. A new window will open"
         		+ "that will allow you to add categories and questions to the data set. "
         		+ "You will need to add at least four categories, and at least one question per"
@@ -74,9 +71,14 @@ public class HelpMenu extends Dialog{
         StackPane root = new StackPane();
         root.getChildren().add(scrollPane);
         
-        getDialogPane().getScene().getWindow().setOnCloseRequest(event -> this.close());
+        helpLayout.getChildren().addAll(root);
+        
+        helpStage.setScene(new Scene(helpLayout, 600, 300));
+        helpStage.showAndWait();
+        
+        //getDialogPane().getScene().getWindow().setOnCloseRequest(event -> this.close());
 
-        getDialogPane().setContent(root);
+        //getDialogPane().setContent(root);
         
 	}
 
