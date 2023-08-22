@@ -60,8 +60,7 @@ public class MainApp extends Application
         
     }
 
-    @SuppressWarnings("exports")
-	@Override
+    @Override
     public void start(Stage primaryStageInput)
     {
     	primaryStage = primaryStageInput;
@@ -224,10 +223,10 @@ public class MainApp extends Application
 
     private void rollButtonClicked()
     {
-        Random rand = new Random();
-        rollNumber = rand.nextInt(6) + 1;
+        //Random rand = new Random();
+        //rollNumber = rand.nextInt(6) + 1;
         
-        //rollNumber = 4; // used for troubleshooting
+        rollNumber = 4; // used for troubleshooting
         
         setValidMovementDirections();
 
